@@ -18,6 +18,7 @@ import 'package:localsend_isolates/rust/api/http.dart';
 import 'package:localsend_isolates/rust/api/logging.dart';
 import 'package:localsend_isolates/rust/api/metadata.dart';
 import 'package:localsend_isolates/rust/api/model.dart';
+import 'package:localsend_isolates/rust/api/send_server.dart';
 import 'package:localsend_isolates/rust/api/server.dart';
 import 'package:localsend_isolates/rust/api/stream.dart';
 import 'package:localsend_isolates/rust/api/webrtc.dart';
@@ -200,6 +201,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   RustStreamSink<RsHashFileEvent> dco_decode_StreamSink_rs_hash_file_event_Sse(dynamic raw);
 
   @protected
+  RustStreamSink<RsSendServerUploadEvent> dco_decode_StreamSink_rs_send_server_upload_event_Sse(dynamic raw);
+
+  @protected
   RustStreamSink<RsServerEvent> dco_decode_StreamSink_rs_server_event_Sse(dynamic raw);
 
   @protected
@@ -277,6 +281,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   RsHttpClientError dco_decode_box_autoadd_rs_http_client_error(dynamic raw);
 
   @protected
+  RsSendServerError dco_decode_box_autoadd_rs_send_server_error(dynamic raw);
+
+  @protected
+  RsSendServerUploadOptions dco_decode_box_autoadd_rs_send_server_upload_options(dynamic raw);
+
+  @protected
   RTCSendFileResponse dco_decode_box_autoadd_rtc_send_file_response(dynamic raw);
 
   @protected
@@ -334,6 +344,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<FileDto> dco_decode_list_file_dto(dynamic raw);
 
   @protected
+  Uint64List dco_decode_list_prim_u_64_strict(dynamic raw);
+
+  @protected
   List<int> dco_decode_list_prim_u_8_loose(dynamic raw);
 
   @protected
@@ -350,6 +363,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<RsDeviceLog> dco_decode_list_rs_device_log(dynamic raw);
+
+  @protected
+  List<RsSendServerFile> dco_decode_list_rs_send_server_file(dynamic raw);
 
   @protected
   LsHttpClientVersion dco_decode_ls_http_client_version(dynamic raw);
@@ -449,6 +465,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   RsHttpClientError dco_decode_rs_http_client_error(dynamic raw);
 
   @protected
+  RsSendServerError dco_decode_rs_send_server_error(dynamic raw);
+
+  @protected
+  RsSendServerFile dco_decode_rs_send_server_file(dynamic raw);
+
+  @protected
+  RsSendServerUploadEvent dco_decode_rs_send_server_upload_event(dynamic raw);
+
+  @protected
+  RsSendServerUploadOptions dco_decode_rs_send_server_upload_options(dynamic raw);
+
+  @protected
   RsServerEvent dco_decode_rs_server_event(dynamic raw);
 
   @protected
@@ -468,6 +496,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   SecurityContext dco_decode_security_context(dynamic raw);
+
+  @protected
+  SendServerAnonLimits dco_decode_send_server_anon_limits(dynamic raw);
+
+  @protected
+  SendServerConfig dco_decode_send_server_config(dynamic raw);
+
+  @protected
+  SendServerDefaults dco_decode_send_server_defaults(dynamic raw);
+
+  @protected
+  SendServerLimits dco_decode_send_server_limits(dynamic raw);
 
   @protected
   SessionEndReasonV2 dco_decode_session_end_reason_v_2(dynamic raw);
@@ -664,6 +704,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   RustStreamSink<RsHashFileEvent> sse_decode_StreamSink_rs_hash_file_event_Sse(SseDeserializer deserializer);
 
   @protected
+  RustStreamSink<RsSendServerUploadEvent> sse_decode_StreamSink_rs_send_server_upload_event_Sse(SseDeserializer deserializer);
+
+  @protected
   RustStreamSink<RsServerEvent> sse_decode_StreamSink_rs_server_event_Sse(SseDeserializer deserializer);
 
   @protected
@@ -741,6 +784,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   RsHttpClientError sse_decode_box_autoadd_rs_http_client_error(SseDeserializer deserializer);
 
   @protected
+  RsSendServerError sse_decode_box_autoadd_rs_send_server_error(SseDeserializer deserializer);
+
+  @protected
+  RsSendServerUploadOptions sse_decode_box_autoadd_rs_send_server_upload_options(SseDeserializer deserializer);
+
+  @protected
   RTCSendFileResponse sse_decode_box_autoadd_rtc_send_file_response(SseDeserializer deserializer);
 
   @protected
@@ -798,6 +847,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<FileDto> sse_decode_list_file_dto(SseDeserializer deserializer);
 
   @protected
+  Uint64List sse_decode_list_prim_u_64_strict(SseDeserializer deserializer);
+
+  @protected
   List<int> sse_decode_list_prim_u_8_loose(SseDeserializer deserializer);
 
   @protected
@@ -814,6 +866,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<RsDeviceLog> sse_decode_list_rs_device_log(SseDeserializer deserializer);
+
+  @protected
+  List<RsSendServerFile> sse_decode_list_rs_send_server_file(SseDeserializer deserializer);
 
   @protected
   LsHttpClientVersion sse_decode_ls_http_client_version(SseDeserializer deserializer);
@@ -915,6 +970,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   RsHttpClientError sse_decode_rs_http_client_error(SseDeserializer deserializer);
 
   @protected
+  RsSendServerError sse_decode_rs_send_server_error(SseDeserializer deserializer);
+
+  @protected
+  RsSendServerFile sse_decode_rs_send_server_file(SseDeserializer deserializer);
+
+  @protected
+  RsSendServerUploadEvent sse_decode_rs_send_server_upload_event(SseDeserializer deserializer);
+
+  @protected
+  RsSendServerUploadOptions sse_decode_rs_send_server_upload_options(SseDeserializer deserializer);
+
+  @protected
   RsServerEvent sse_decode_rs_server_event(SseDeserializer deserializer);
 
   @protected
@@ -934,6 +1001,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   SecurityContext sse_decode_security_context(SseDeserializer deserializer);
+
+  @protected
+  SendServerAnonLimits sse_decode_send_server_anon_limits(SseDeserializer deserializer);
+
+  @protected
+  SendServerConfig sse_decode_send_server_config(SseDeserializer deserializer);
+
+  @protected
+  SendServerDefaults sse_decode_send_server_defaults(SseDeserializer deserializer);
+
+  @protected
+  SendServerLimits sse_decode_send_server_limits(SseDeserializer deserializer);
 
   @protected
   SessionEndReasonV2 sse_decode_session_end_reason_v_2(SseDeserializer deserializer);
@@ -1174,6 +1253,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_StreamSink_rs_hash_file_event_Sse(RustStreamSink<RsHashFileEvent> self, SseSerializer serializer);
 
   @protected
+  void sse_encode_StreamSink_rs_send_server_upload_event_Sse(RustStreamSink<RsSendServerUploadEvent> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_StreamSink_rs_server_event_Sse(RustStreamSink<RsServerEvent> self, SseSerializer serializer);
 
   @protected
@@ -1252,6 +1334,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_box_autoadd_rs_http_client_error(RsHttpClientError self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_rs_send_server_error(RsSendServerError self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_rs_send_server_upload_options(RsSendServerUploadOptions self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_rtc_send_file_response(RTCSendFileResponse self, SseSerializer serializer);
 
   @protected
@@ -1309,6 +1397,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_list_file_dto(List<FileDto> self, SseSerializer serializer);
 
   @protected
+  void sse_encode_list_prim_u_64_strict(Uint64List self, SseSerializer serializer);
+
+  @protected
   void sse_encode_list_prim_u_8_loose(List<int> self, SseSerializer serializer);
 
   @protected
@@ -1325,6 +1416,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_list_rs_device_log(List<RsDeviceLog> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_rs_send_server_file(List<RsSendServerFile> self, SseSerializer serializer);
 
   @protected
   void sse_encode_ls_http_client_version(LsHttpClientVersion self, SseSerializer serializer);
@@ -1427,6 +1521,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_rs_http_client_error(RsHttpClientError self, SseSerializer serializer);
 
   @protected
+  void sse_encode_rs_send_server_error(RsSendServerError self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_rs_send_server_file(RsSendServerFile self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_rs_send_server_upload_event(RsSendServerUploadEvent self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_rs_send_server_upload_options(RsSendServerUploadOptions self, SseSerializer serializer);
+
+  @protected
   void sse_encode_rs_server_event(RsServerEvent self, SseSerializer serializer);
 
   @protected
@@ -1446,6 +1552,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_security_context(SecurityContext self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_send_server_anon_limits(SendServerAnonLimits self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_send_server_config(SendServerConfig self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_send_server_defaults(SendServerDefaults self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_send_server_limits(SendServerLimits self, SseSerializer serializer);
 
   @protected
   void sse_encode_session_end_reason_v_2(SessionEndReasonV2 self, SseSerializer serializer);

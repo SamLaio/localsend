@@ -1,3 +1,3 @@
-All files in this directory should only call utility functions.
+此目錄中的所有檔案都只能呼叫 utility functions。
 
-Isolate logic is prohibited in this directory.
+此目錄禁止放入 isolate logic。

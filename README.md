@@ -20,65 +20,65 @@
 [github]: https://github.com/localsend/localsend
 [codeberg]: https://codeberg.org/localsend/localsend
 
-LocalSend is a free, open-source app that allows you to securely share files and messages with nearby devices over your local network without needing an internet connection.
+LocalSend 是一個免費、open-source app，可讓你在 local network 中安全地與附近裝置分享檔案與訊息，不需要 internet connection。
 
-- [About](#about)
-- [Sponsors](#sponsors)
-- [Screenshots](#screenshots)
-- [Download](#download)
-- [How It Works](#how-it-works)
-- [Dependency Hierarchy](#dependency-hierarchy)
-- [Getting Started](#getting-started)
-- [Command Line Interface](#command-line-interface)
-- [Contributing](#contributing)
-  - [Translation](#translation)
-  - [Bug Fixes and Improvements](#bug-fixes-and-improvements)
-- [Troubleshooting](#troubleshooting)
-- [Building](#building)
+- [關於](#關於)
+- [贊助者](#贊助者)
+- [畫面截圖](#畫面截圖)
+- [下載](#下載)
+- [運作方式](#運作方式)
+- [依賴層級](#依賴層級)
+- [開始使用](#開始使用)
+- [命令列介面](#命令列介面)
+- [貢獻](#貢獻)
+  - [翻譯](#翻譯)
+  - [Bug 修正與改善](#bug-修正與改善)
+- [疑難排解](#疑難排解)
+- [建置](#建置)
   - [Android](#android)
   - [iOS](#ios)
   - [macOS](#macos)
   - [Windows](#windows)
   - [Linux](#linux)
 
-## About
+## 關於
 
-LocalSend is a cross-platform app that enables secure communication between devices using a REST API and HTTPS encryption. Unlike other messaging apps that rely on external servers, LocalSend doesn't require an internet connection or third-party servers, making it a fast and reliable solution for local communication.
+LocalSend 是一個 cross-platform app，使用 REST API 與 HTTPS encryption 在裝置間建立安全通訊。不同於依賴外部 server 的 messaging apps，LocalSend 不需要 internet connection 或第三方 servers，因此是快速、可靠的 local communication 解決方案。
 
-## Sponsors
+## 贊助者
 
-Browser testing via
+Browser testing 由以下贊助：
 
 <a href="https://www.testmuai.com/?utm_medium=sponsor&utm_source=localsend" target="_blank">
     <img src="https://localsend.org/img/sponsors/tesmu.svg" style="vertical-align: middle;" width="250" height="45" />
 </a>
 
-## Screenshots
+## 畫面截圖
 
 <img src="https://localsend.org/img/screenshot-iphone.webp" alt="iPhone screenshot" height="300"/> <img src="https://localsend.org/img/screenshot-pc.webp" alt="PC screenshot" height="300"/>
 
-## Download
+## 下載
 
 [![Packaging status](https://repology.org/badge/tiny-repos/localsend.svg)](https://repology.org/project/localsend/versions)
 
-It is recommended to download the app either from an app store or from a package manager because the app does not have an auto-update.
+建議從 app store 或 package manager 下載此 app，因為 app 本身沒有 auto-update。
 
-| Windows                 | macOS                   | Linux              | Android        | iOS           | Fire OS    |
-|-------------------------|-------------------------|--------------------|----------------|---------------|------------|
-| [Winget][]              | [App Store][]           | [Flathub][]        | [Play Store][] | [App Store][] | [Amazon][] |
-| [Scoop][]               | [Homebrew][]            | [Nixpkgs][]        | [F-Droid][]    |               |            |
-| [Chocolatey][]          | [DMG Installer][latest] | [Snap][]           | [APK][latest]  |               |            |
-| [EXE Installer][latest] |                         | [AUR][]            |                |               |            |
-| [Portable ZIP][latest]  |                         | [TAR][latest]      |                |               |            |
-|                         |                         | [DEB][latest]      |                |               |            |
-|                         |                         | [AppImage][latest] |                |               |            |
+| Windows | macOS | Linux | Android | iOS | Fire OS |
+|---|---|---|---|---|---|
+| [Winget][] | [App Store][] | [Flathub][] | [Play Store][] | [App Store][] | [Amazon][] |
+| [Scoop][] | [Homebrew][] | [Nixpkgs][] | [F-Droid][] | | |
+| [Chocolatey][] | [DMG Installer][latest] | [Snap][] | [APK][latest] | | |
+| [EXE Installer][latest] | | [AUR][] | | | |
+| [Portable ZIP][latest] | | [TAR][latest] | | | |
+| | | [DEB][latest] | | | |
+| | | [AppImage][latest] | | | |
 
-Read more about [distribution channels][].
+更多資訊請見 [distribution channels][]。
 
-Windows binaries are signed. Read more about the [Code signing policy][].
+Windows binaries 已簽章。更多資訊請見 [Code signing policy][]。
 
 > [!CAUTION]
-> **Unofficial MSIX preview:** you can try builds from the latest commits at [localsend.ob-buff.dev](https://localsend.ob-buff.dev/). Stability is not guaranteed and all custom code tweaks are listed on that site.
+> **非官方 MSIX preview：** 你可以在 [localsend.ob-buff.dev](https://localsend.ob-buff.dev/) 試用 latest commits 的 builds。穩定性不保證，且所有 custom code tweaks 都列在該網站上。
 
 [windows store]: https://www.microsoft.com/store/apps/9NCB4Z0TZ6RR
 [app store]: https://apps.apple.com/us/app/localsend/id1661733229
@@ -97,138 +97,132 @@ Windows binaries are signed. Read more about the [Code signing policy][].
 [distribution channels]: https://github.com/localsend/localsend/blob/main/CONTRIBUTING.md#distribution
 [code signing policy]: https://github.com/localsend/localsend/blob/main/CODE_SIGNING.md
 
-**Compatibility**
+**相容性**
 
-| Platform | Minimum Version | Note                                                                                                                        |
-|----------|-----------------|-----------------------------------------------------------------------------------------------------------------------------|
-| Android  | 5.0             | -                                                                                                                           |
-| iOS      | 12.0            | -                                                                                                                           |
-| macOS    | 11 Big Sur      | Use OpenCore Legacy Patcher 2.0.2 (See [#1005](https://github.com/localsend/localsend/issues/1005#issuecomment-2449899384)) |
-| Windows  | 10              | The last version to support Windows 7 is v1.15.4. There might be backports of newer versions for Windows 7 in the future.   |
-| Linux    | N.A.            | Deps: Gnome: `xdg-desktop-portal` and `xdg-desktop-portal-gtk`, KDE: `xdg-desktop-portal` and `xdg-desktop-portal-kde`      |
+| 平台 | 最低版本 | 備註 |
+|---|---|---|
+| Android | 5.0 | - |
+| iOS | 12.0 | - |
+| macOS | 11 Big Sur | 使用 OpenCore Legacy Patcher 2.0.2，見 [#1005](https://github.com/localsend/localsend/issues/1005#issuecomment-2449899384)。 |
+| Windows | 10 | 最後一個支援 Windows 7 的版本是 v1.15.4。未來可能會把新版 backport 到 Windows 7。 |
+| Linux | N.A. | Deps: Gnome: `xdg-desktop-portal` and `xdg-desktop-portal-gtk`, KDE: `xdg-desktop-portal` and `xdg-desktop-portal-kde` |
 
-## Setup
+## 設定
 
-In most cases, LocalSend should work out of the box. However, if you are having trouble sending or receiving files, you may need to configure your firewall to allow LocalSend to communicate over your local network.
+多數情況下，LocalSend 應該能開箱即用。不過，如果你傳送或接收檔案時遇到問題，可能需要調整 firewall，允許 LocalSend 在 local network 中通訊。
 
-| Traffic Type | Protocol | Port  | Action |
-|--------------|----------|-------|--------|
-| Incoming     | TCP, UDP | 53317 | Allow  |
-| Outgoing     | TCP, UDP | Any   | Allow  |
+| 流量類型 | Protocol | Port | Action |
+|---|---|---|---|
+| Incoming | TCP, UDP | 53317 | Allow |
+| Outgoing | TCP, UDP | Any | Allow |
 
-Also make sure to disable AP isolation on your router. It should be usually disabled by default but some routers may have it enabled (especially guest networks).
-See [troubleshooting](#troubleshooting) for more information.
+也請確認 router 已停用 AP isolation。通常預設會停用，但部分 routers 可能啟用，特別是 guest networks。
+更多資訊請見 [疑難排解](#疑難排解)。
 
 **Portable Mode**
 
-(Introduced in v1.13.0)
+(v1.13.0 引入)
 
-Create a file named `settings.json` located in the same directory as the executable.
-This file can be empty.
-The app will use this file to store settings instead of the default location.
+在 executable 相同目錄建立名為 `settings.json` 的檔案。此檔可以是空的。
+App 會改用這個檔案儲存 settings，而不是使用預設位置。
 
 **Start hidden**
 
-(Updated in v1.15.0)
+(v1.15.0 更新)
 
-To start the app hidden (only in tray), use the `--hidden` flag (example: `localsend_app.exe --hidden`).
+若要以 hidden 狀態啟動 app，也就是只出現在 tray，請使用 `--hidden` flag，例如 `localsend_app.exe --hidden`。
 
-On v1.14.0 and earlier, the app starts hidden if `autostart` flag is set, and the hidden setting is enabled.
+在 v1.14.0 與更早版本中，如果設定了 `autostart` flag 且 hidden setting 已啟用，app 會以 hidden 狀態啟動。
 
-## How It Works
+## 運作方式
 
-LocalSend uses a secure communication protocol that allows devices to communicate with each other using a REST API. All data is sent securely over HTTPS, and the TLS/SSL certificate is generated on the fly on each device, ensuring maximum security.
+LocalSend 使用安全通訊 protocol，讓裝置透過 REST API 彼此通訊。所有資料都會透過 HTTPS 安全傳送，且 TLS/SSL certificate 會在每台裝置上即時產生，以提供最高安全性。
 
-For more information on the LocalSend Protocol, see the [documentation](https://github.com/localsend/protocol).
+更多 LocalSend Protocol 資訊請見 [documentation](https://github.com/localsend/protocol)。
 
-## Dependency Hierarchy
+## 依賴層級
 
 ![Dependency hierarchy](support/docs/dependency-hierarchy.svg)
 
-## Getting Started
+## 開始使用
 
-To compile LocalSend from the source code, follow these steps:
+若要從 source code 編譯 LocalSend，請依照下列步驟：
 
-1. Install Flutter [directly](https://flutter.dev) or using [fvm](https://fvm.app) (see [version required](.fvmrc))
-2. Install [Rust](https://www.rust-lang.org/tools/install)
-3. Clone the `LocalSend` repository
-4. Run `cd app` to enter the app directory
-5. Run `flutter pub get` to download dependencies
-6. Run `flutter run` to start the app
+1. 直接安裝 [Flutter](https://flutter.dev)，或使用 [fvm](https://fvm.app) 安裝，見 [.fvmrc](.fvmrc) 指定版本。
+2. 安裝 [Rust](https://www.rust-lang.org/tools/install)。
+3. Clone `LocalSend` repository。
+4. 執行 `cd app` 進入 app 目錄。
+5. 執行 `flutter pub get` 下載 dependencies。
+6. 執行 `flutter run` 啟動 app。
 
 > [!NOTE]
-> LocalSend currently requires an older Flutter version (specified in [.fvmrc](.fvmrc))
-> and thus build issues may be caused by a mismatch between the required and the (system-wide) installed Flutter version.  
-> To make development more consistent, LocalSend uses [fvm](https://fvm.app) to manage the project Flutter version.
-> After installing `fvm`, run `fvm flutter` instead of `flutter`.
+> LocalSend 目前需要較舊的 Flutter version，指定於 [.fvmrc](.fvmrc)。
+> 因此 build issues 可能是 required version 與系統全域已安裝 Flutter version 不一致造成的。
+> 為了讓開發環境更一致，LocalSend 使用 [fvm](https://fvm.app) 管理專案 Flutter version。
+> 安裝 `fvm` 後，請執行 `fvm flutter`，不要直接執行 `flutter`。
 
-## Command Line Interface
+## 命令列介面
 
-The LocalSend CLI is a terminal client built on LocalSend Protocol v2.
-Run `localsend-cli --help` to see every available option and hotkey.
+LocalSend CLI 是建立在 LocalSend Protocol v2 上的 terminal client。
+執行 `localsend-cli --help` 可查看所有 available options 與 hotkeys。
 
-Use the `send` command with one or more files, directories, or a mixture of both:
+使用 `send` command 傳送一個或多個 files、directories，或兩者混合：
 
 ```shell
 localsend-cli send report.pdf photo.jpg ./project-backup
 ```
 
-The command opens the discovered-device list; select the destination interactively
-and press Enter to start the transfer.
+此 command 會開啟已探索裝置清單；互動式選取 destination 後按 Enter 開始 transfer。
 
-To select the destination without an interactive device list, pass its exact alias
-or IP address:
+若要略過互動式 device list 直接選取 destination，請傳入精確 alias 或 IP address：
 
 ```shell
 localsend-cli send --to "Cute Tomato" report.pdf
 localsend-cli send --to 192.168.27.26 report.pdf
 ```
 
-An alias must uniquely identify a discovered device. An IP address is probed directly
-over HTTPS on LocalSend's default port (`53317`).
+Alias 必須能唯一識別一個已探索裝置。IP address 會直接透過 HTTPS probing LocalSend 預設 port (`53317`)。
 
-Directories are collected recursively. Their selected root names and nested paths
-are preserved on the receiver. Empty directories are not sent because LocalSend
-transfers file entries rather than directory entries.
+Directories 會遞迴收集。接收端會保留被選取的 root names 與 nested paths。Empty directories 不會送出，因為 LocalSend 傳送的是 file entries，不是 directory entries。
 
-## Contributing
+## 貢獻
 
-We welcome contributions from anyone interested in helping improve LocalSend. If you'd like to contribute, there are a few ways to get involved:
+歡迎任何想協助改善 LocalSend 的人貢獻。若你想參與，可以透過以下方式協助。
 
-### Translation
+### 翻譯
 
-You can help translate LocalSend into other languages. We use the [Weblate](https://hosted.weblate.org/projects/localsend/app) platform to manage translations.
+你可以協助把 LocalSend 翻譯成其他語言。我們使用 [Weblate](https://hosted.weblate.org/projects/localsend/app) platform 管理 translations。
 
-Alternatively, you can also contribute by forking this repository and adding translations manually.
+你也可以 fork 此 repository，手動新增 translations。
 
-The translations are located in the [app/assets/i18n](https://github.com/localsend/localsend/tree/main/app/assets/i18n) directory. Edit the `_missing_translations_<locale>.json` or `strings_<locale>.i18n.json` file to add or update translations.
+Translations 位於 [app/assets/i18n](https://github.com/localsend/localsend/tree/main/app/assets/i18n) 目錄。請編輯 `_missing_translations_<locale>.json` 或 `strings_<locale>.i18n.json` 來新增或更新 translations。
 
 <a href="https://hosted.weblate.org/engage/localsend/">
 <img src="https://hosted.weblate.org/widget/localsend/app/multi-auto.svg" alt="Translation status" />
 </a>
 
-**_Take note:_ Fields decorated with `@` are not meant to be translated; they are not used in the app in any way, being merely informative text about the file or to give context to the translator.**
+**_注意：_ 以 `@` 裝飾的 fields 不需要翻譯；它們不會以任何方式被 app 使用，只是關於檔案的資訊或給譯者的 context。**
 
-### Bug Fixes and Improvements
+### Bug 修正與改善
 
-- **Bug Fixes:** If you find a bug, please create a pull request with a clear description of the issue and how to fix it.
-- **Improvements:** Have an idea for how to improve LocalSend? Please create an issue first to discuss why the improvement is needed.
+- **Bug 修正：** 如果你發現 bug，請建立 pull request，並清楚描述問題與修正方式。
+- **改善：** 如果你有改善 LocalSend 的想法，請先建立 issue 討論為什麼需要這個改善。
 
-For more information, see the [contributing guide](https://github.com/localsend/localsend/blob/main/CONTRIBUTING.md).
+更多資訊請見 [contributing guide](https://github.com/localsend/localsend/blob/main/CONTRIBUTING.md)。
 
-## Troubleshooting
+## 疑難排解
 
-| Issue              | Platform (Sending) | Platform (Receiving) | Solution                                                                                                                                |
-|--------------------|--------------------|----------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| Device not visible | Any                | Any                  | Make sure to disable AP-Isolation on your router. If it is enabled, connections between devices are forbidden.                          |
-| Device not visible | Any                | Windows              | Make sure to configure your network as a "private" network. Windows might be more restrictive when the network is configured as public. |
-| Device not visible | macOS, iOS         | Any                  | You can try to toggle the "Local Network" permission under "Privacy" in the OS settings.                                                |
-| Speed too slow     | Any                | Any                  | Use 5 Ghz; Disable encryption on both devices                                                                                           |
-| Speed too slow     | Any                | Android              | Known issue. https://github.com/flutter-cavalry/saf_stream/issues/4                                                                     |
+| Issue | Platform (Sending) | Platform (Receiving) | Solution |
+|---|---|---|---|
+| Device not visible | Any | Any | 請確認 router 已停用 AP-Isolation。若啟用，裝置之間會禁止連線。 |
+| Device not visible | Any | Windows | 請確認你的 network 設定為「private」network。Windows 在 public network 下可能更嚴格。 |
+| Device not visible | macOS, iOS | Any | 可嘗試在 OS settings 的 Privacy 中切換「Local Network」permission。 |
+| Speed too slow | Any | Any | 使用 5 GHz；在兩台裝置上停用 encryption。 |
+| Speed too slow | Any | Android | 已知 issue: https://github.com/flutter-cavalry/saf_stream/issues/4 |
 
-## Building
+## 建置
 
-These commands are intended for maintainers only. Make sure to run them from the `app` directory.
+這些 commands 僅供 maintainers 使用。請確認從 `app` 目錄執行。
 
 ### Android
 
@@ -238,7 +232,7 @@ Traditional APK
 flutter build apk
 ```
 
-AppBundle for Google Play
+Google Play 使用的 AppBundle
 
 ```bash
 flutter build appbundle
@@ -258,10 +252,57 @@ flutter build macos
 
 ### Windows
 
-**Traditional**
+**傳統建置**
 
 ```bash
 flutter build windows
+```
+
+**Android arm64 APK + Windows 10+ x64 portable ZIP**
+
+```powershell
+.\support\scripts\compile_release_apk_exe.ps1
+```
+
+輸出會放在：
+
+```text
+release/[版本]/release.apk
+release/[版本]/release.zip
+```
+
+Windows ZIP 內的主程式檔名是 `release.exe`。
+
+**Windows 10+ x64 portable ZIP only**
+
+```powershell
+.\support\scripts\compile_release_apk_exe.ps1 -SkipAndroid
+```
+
+輸出會放在：
+
+```text
+release/[版本]/release.zip
+```
+
+ZIP 內的 `release.exe` 是 portable bundle 的 executable，執行時需要同層的 DLL 與 `data\`。
+
+**Windows 10+ x64 EXE installer**
+
+```powershell
+.\support\scripts\compile_windows_exe.ps1
+```
+
+本機未設定 Windows 簽章工具時，可產生 unsigned installer：
+
+```powershell
+.\support\scripts\compile_windows_exe.ps1 -SkipSignTool -SkipMsixHelper
+```
+
+輸出會放在：
+
+```text
+release/[版本]/release-installer.exe
 ```
 
 **Local MSIX App**
@@ -270,7 +311,7 @@ flutter build windows
 flutter pub run msix:create
 ```
 
-**Store ready**
+**Store-ready**
 
 ```bash
 flutter pub run msix:create --store
@@ -278,7 +319,7 @@ flutter pub run msix:create --store
 
 ### Linux
 
-**Traditional**
+**傳統建置**
 
 ```bash
 flutter build linux
@@ -292,9 +333,9 @@ appimage-builder --recipe AppImageBuilder.yml
 
 **Snap**
 
-Instructions in [localsend/snap/README.md](https://github.com/localsend/snap/blob/main/README.md)
+說明位於 [localsend/snap/README.md](https://github.com/localsend/snap/blob/main/README.md)。
 
-## Contributors
+## 貢獻者
 
 <a href="https://github.com/localsend/localsend/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=localsend/localsend"  alt="Localsend Contributors"/>

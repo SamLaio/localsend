@@ -86,6 +86,8 @@ const _autoFinish = 'ls_auto_finish';
 const _minimizeToTray = 'ls_minimize_to_tray';
 const _https = 'ls_https';
 const _sendMode = 'ls_send_mode';
+const _sendServerUrl = 'ls_send_server_url';
+const _sendServerUrlEdited = 'ls_send_server_url_edited';
 const _enableAnimations = 'ls_enable_animations';
 const _deviceType = 'ls_device_type';
 const _deviceModel = 'ls_device_model';
@@ -164,6 +166,10 @@ class PersistenceService {
 
     if (prefs.getString(_showToken) == null) {
       await prefs.setString(_showToken, const Uuid().v4());
+    }
+
+    if (prefs.getString(_sendServerUrl) != null && prefs.getBool(_sendServerUrlEdited) != true) {
+      await prefs.remove(_sendServerUrl);
     }
 
     if (prefs.getString(_aliasKey) == null) {
@@ -504,6 +510,15 @@ class PersistenceService {
 
   Future<void> setSendMode(SendMode mode) async {
     await _prefs.setString(_sendMode, mode.name);
+  }
+
+  String getSendServerUrl() {
+    return _prefs.getString(_sendServerUrl) ?? 'https://exp.com/';
+  }
+
+  Future<void> setSendServerUrl(String url) async {
+    await _prefs.setString(_sendServerUrl, url);
+    await _prefs.setBool(_sendServerUrlEdited, true);
   }
 
   Future<void> setWindowOffsetX(double x) async {

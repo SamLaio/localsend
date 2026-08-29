@@ -236,6 +236,9 @@ class Translations$sendTab$en {
   /// en: 'Nearby devices'
   String get nearbyDevices => 'Nearby devices';
 
+  /// en: 'Upload to Send Server'
+  String get sendServer => 'Upload to Send Server';
+
   /// en: 'This Device'
   String get thisDevice => 'This Device';
 
@@ -1147,6 +1150,9 @@ class Translations$settingsTab$send$en {
 
   /// en: 'Send'
   String get title => 'Send';
+
+  /// en: 'Send Server URL'
+  String get sendServerUrl => 'Send Server URL';
 
   /// en: 'Automatically accept requests in "Share via link" mode'
   String get shareViaLinkAutoAccept => 'Automatically accept requests in "Share via link" mode';

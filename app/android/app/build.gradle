@@ -12,18 +12,28 @@ if (localPropertiesFile.exists()) {
     }
 }
 
+def pubspecVersion = '1.0+1'
+def pubspecFile = rootProject.file('../pubspec.yaml')
+if (pubspecFile.exists()) {
+    def match = pubspecFile.text =~ /(?m)^version:\s*([^\s]+)/
+    if (match.find()) {
+        pubspecVersion = match.group(1)
+    }
+}
+def pubspecVersionParts = pubspecVersion.split('\\+', 2)
+
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
+    flutterVersionCode = pubspecVersionParts.length > 1 ? pubspecVersionParts[1] : '1'
 }
 
-def flutterVersionName = localProperties.getProperty('flutter.versionName')
+def flutterVersionName = System.getenv('RELEASE_VERSION_NAME') ?: localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
+    flutterVersionName = pubspecVersionParts[0]
 }
 
 android {
-    namespace "org.localsend.localsend_app"
+    namespace "com.samliao.localsend"
     compileSdkVersion 36
     ndkVersion flutter.ndkVersion
 
@@ -41,10 +51,10 @@ android {
     }
 
     defaultConfig {
-        applicationId "org.localsend.localsend_app"
+        applicationId "com.samliao.localsend"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 30
         targetSdkVersion 37
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -58,10 +68,15 @@ android {
                 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
             }
 
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-            storePassword keystoreProperties['storePassword']
+            def keyAliasValue = keystoreProperties['keyAlias'] ?: System.getenv('SIGNING_KEY_ALIAS')
+            def keyPasswordValue = keystoreProperties['keyPassword'] ?: System.getenv('SIGNING_KEY_PASSWORD')
+            def storeFileValue = keystoreProperties['storeFile'] ?: System.getenv('SIGNING_KEYSTORE_PATH')
+            def storePasswordValue = keystoreProperties['storePassword'] ?: System.getenv('SIGNING_STORE_PASSWORD')
+
+            keyAlias keyAliasValue
+            keyPassword keyPasswordValue
+            storeFile storeFileValue ? file(storeFileValue) : null
+            storePassword storePasswordValue
         }
     }
 
@@ -98,4 +113,31 @@ android.applicationVariants.all { variant ->
             output.versionCodeOverride = variant.versionCode * 10 + abiVersionCode
         }
     }
+}
+
+tasks.register("copyReleaseApk") {
+    doLast {
+        def repoRoot = rootProject.projectDir.parentFile.parentFile
+        def releaseDir = new File(repoRoot, "release/${flutterVersionName}")
+        def apkDir = layout.buildDirectory.dir("outputs/apk/release").get().asFile
+        def flutterApkDir = layout.buildDirectory.dir("outputs/flutter-apk").get().asFile
+        def apk = [
+            new File(flutterApkDir, "app-arm64-v8a-release.apk"),
+            new File(apkDir, "app-arm64-v8a-release.apk"),
+        ].find { it.exists() }
+
+        if (apk == null) {
+            throw new GradleException("Could not find arm64 release APK in ${flutterApkDir} or ${apkDir}")
+        }
+
+        copy {
+            from apk
+            into releaseDir
+            rename { "release.apk" }
+        }
+    }
+}
+
+tasks.matching { it.name == "assembleRelease" }.configureEach {
+    finalizedBy("copyReleaseApk")
 }

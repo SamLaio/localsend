@@ -71,6 +71,7 @@
     },
     "shareIntentInfo": "You can also use the \"Share\" feature of your mobile device to select files more easily.",
     "nearbyDevices": "Nearby devices",
+    "sendServer": "Upload to Send Server",
     "thisDevice": "This Device",
     "scan": "Search devices",
     "manualSending": "Manual sending",
@@ -126,6 +127,7 @@
     },
     "send": {
       "title": "Send",
+      "sendServerUrl": "Send Server URL",
       "shareViaLinkAutoAccept": "Automatically accept requests in \"Share via link\" mode",
       "createChecksums": "Create checksums when sending files"
     },
@@ -516,6 +518,24 @@
       "single": "Sends files to one recipient. Selection will be cleared after finished files transfer.",
       "multiple": "Sends files to multiple recipients. Selection will not be cleared after finished files transfer.",
       "link": "Recipients who do not have LocalSend installed can download the selected files by opening the link in their browser."
+    },
+    "sendServerUpload": {
+      "title": "Upload to Send Server",
+      "reloadConfig": "Reload configuration",
+      "selectedFiles": "{files} files selected, total size {size}",
+      "anonymousLimit": "Anonymous upload limit: {size}",
+      "sizeTooLarge": "The selected files exceed the anonymous upload size allowed by the server.",
+      "urlChanged": "Server URL changed. Reload configuration first.",
+      "password": "Password (optional)",
+      "downloadLimit": "Downloads",
+      "expireTime": "Expiration",
+      "upload": "Upload",
+      "share": "Share",
+      "minutes": "{n} minutes",
+      "hours": "{n} hours",
+      "days": "{n} days",
+      "months": "{n} months",
+      "years": "{n} years"
     },
     "zoom": {
       "title": "URL"

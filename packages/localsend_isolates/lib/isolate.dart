@@ -15,6 +15,15 @@ export 'package:localsend_isolates/src/isolate/child/server_isolate.dart'
         HttpServerStartedEvent,
         HttpServerWebFileDownloadEvent,
         HttpServerWebPrepareDownloadEvent;
+export 'package:localsend_isolates/src/isolate/child/send_server_upload_isolate.dart'
+    show
+        SendServerConfigLoadedEvent,
+        SendServerFetchConfigTask,
+        SendServerUploadEvent,
+        SendServerUploadFailedEvent,
+        SendServerUploadFile,
+        SendServerUploadFinishedEvent,
+        SendServerUploadProgressEvent;
 export 'package:localsend_isolates/src/isolate/child/sync_provider.dart';
 export 'package:localsend_isolates/src/isolate/child/upload_isolate.dart'
     show

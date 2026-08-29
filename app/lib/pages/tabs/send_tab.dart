@@ -19,9 +19,11 @@ import 'package:localsend_app/util/native/file_picker.dart';
 import 'package:localsend_app/util/native/platform_check.dart';
 import 'package:localsend_app/widget/big_button.dart';
 import 'package:localsend_app/widget/custom_icon_button.dart';
+import 'package:localsend_app/widget/device_bage.dart';
 import 'package:localsend_app/widget/dialogs/add_file_dialog.dart';
 import 'package:localsend_app/widget/dialogs/send_mode_help_dialog.dart';
 import 'package:localsend_app/widget/file_thumbnail.dart';
+import 'package:localsend_app/widget/list_tile/custom_list_tile.dart';
 import 'package:localsend_app/widget/list_tile/device_list_tile.dart';
 import 'package:localsend_app/widget/list_tile/device_placeholder_list_tile.dart';
 import 'package:localsend_app/widget/opacity_slideshow.dart';
@@ -199,6 +201,12 @@ class SendTab extends StatelessWidget {
                 ),
               ],
             ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10, left: _horizontalPadding, right: _horizontalPadding),
+              child: _SendServerTargetListTile(
+                onTap: () async => await vm.onTapSendServer(context),
+              ),
+            ),
             if (vm.nearbyDevices.isEmpty)
               const Padding(
                 padding: EdgeInsets.only(bottom: 10, left: _horizontalPadding, right: _horizontalPadding),
@@ -269,6 +277,40 @@ class SendTab extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+}
+
+class _SendServerTargetListTile extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const _SendServerTargetListTile({
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final badgeColor = Color.lerp(Theme.of(context).colorScheme.secondaryContainer, Colors.white, 0.3)!;
+    return CustomListTile(
+      icon: const Icon(Icons.cloud_upload_outlined, size: 46),
+      title: Text(t.sendTab.sendServer, style: const TextStyle(fontSize: 20)),
+      subTitle: Wrap(
+        runSpacing: 10,
+        spacing: 10,
+        children: [
+          DeviceBadge(
+            backgroundColor: badgeColor,
+            foregroundColor: Theme.of(context).colorScheme.onSecondaryContainer,
+            label: 'Firefox Send',
+          ),
+          DeviceBadge(
+            backgroundColor: badgeColor,
+            foregroundColor: Theme.of(context).colorScheme.onSecondaryContainer,
+            label: 'Encrypted',
+          ),
+        ],
+      ),
+      onTap: onTap,
     );
   }
 }

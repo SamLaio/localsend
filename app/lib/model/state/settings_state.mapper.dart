@@ -117,6 +117,11 @@ class SettingsStateMapper extends ClassMapperBase<SettingsState> {
     'sendMode',
     _$sendMode,
   );
+  static String _$sendServerUrl(SettingsState v) => v.sendServerUrl;
+  static const Field<SettingsState, String> _f$sendServerUrl = Field(
+    'sendServerUrl',
+    _$sendServerUrl,
+  );
   static bool _$saveWindowPlacement(SettingsState v) => v.saveWindowPlacement;
   static const Field<SettingsState, bool> _f$saveWindowPlacement = Field(
     'saveWindowPlacement',
@@ -192,6 +197,7 @@ class SettingsStateMapper extends ClassMapperBase<SettingsState> {
     #minimizeToTray: _f$minimizeToTray,
     #https: _f$https,
     #sendMode: _f$sendMode,
+    #sendServerUrl: _f$sendServerUrl,
     #saveWindowPlacement: _f$saveWindowPlacement,
     #enableAnimations: _f$enableAnimations,
     #deviceType: _f$deviceType,
@@ -226,6 +232,7 @@ class SettingsStateMapper extends ClassMapperBase<SettingsState> {
       minimizeToTray: data.dec(_f$minimizeToTray),
       https: data.dec(_f$https),
       sendMode: data.dec(_f$sendMode),
+      sendServerUrl: data.dec(_f$sendServerUrl),
       saveWindowPlacement: data.dec(_f$saveWindowPlacement),
       enableAnimations: data.dec(_f$enableAnimations),
       deviceType: data.dec(_f$deviceType),
@@ -326,6 +333,7 @@ abstract class SettingsStateCopyWith<$R, $In extends SettingsState, $Out>
     bool? minimizeToTray,
     bool? https,
     SendMode? sendMode,
+    String? sendServerUrl,
     bool? saveWindowPlacement,
     bool? enableAnimations,
     DeviceType? deviceType,
@@ -388,6 +396,7 @@ class _SettingsStateCopyWithImpl<$R, $Out>
     bool? minimizeToTray,
     bool? https,
     SendMode? sendMode,
+    String? sendServerUrl,
     bool? saveWindowPlacement,
     bool? enableAnimations,
     Object? deviceType = $none,
@@ -421,6 +430,7 @@ class _SettingsStateCopyWithImpl<$R, $Out>
       if (minimizeToTray != null) #minimizeToTray: minimizeToTray,
       if (https != null) #https: https,
       if (sendMode != null) #sendMode: sendMode,
+      if (sendServerUrl != null) #sendServerUrl: sendServerUrl,
       if (saveWindowPlacement != null)
         #saveWindowPlacement: saveWindowPlacement,
       if (enableAnimations != null) #enableAnimations: enableAnimations,
@@ -461,6 +471,7 @@ class _SettingsStateCopyWithImpl<$R, $Out>
     minimizeToTray: data.get(#minimizeToTray, or: $value.minimizeToTray),
     https: data.get(#https, or: $value.https),
     sendMode: data.get(#sendMode, or: $value.sendMode),
+    sendServerUrl: data.get(#sendServerUrl, or: $value.sendServerUrl),
     saveWindowPlacement: data.get(
       #saveWindowPlacement,
       or: $value.saveWindowPlacement,

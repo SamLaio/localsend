@@ -1,4 +1,4 @@
-package org.localsend.localsend_app
+package com.samliao.localsend
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -22,7 +22,7 @@ import java.util.Locale
 import java.util.TimeZone
 
 
-private const val CHANNEL = "org.localsend.localsend_app/localsend"
+private const val CHANNEL = "com.samliao.localsend/localsend"
 private const val REQUEST_CODE_PICK_DIRECTORY = 1
 private const val REQUEST_CODE_PICK_DIRECTORY_PATH = 2
 private const val REQUEST_CODE_PICK_FILE = 3
@@ -110,6 +110,11 @@ class MainActivity : FlutterActivity() {
 
                 "openGallery" -> {
                     openGallery()
+                    result.success(null)
+                }
+
+                "shareText" -> {
+                    shareText(call.argument<String>("text") ?: "")
                     result.success(null)
                 }
 
@@ -486,6 +491,14 @@ class MainActivity : FlutterActivity() {
         intent.action = Intent.ACTION_VIEW
         intent.type = "image/*"
         startActivity(intent)
+    }
+
+    private fun shareText(text: String) {
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, text)
+        }
+        startActivity(Intent.createChooser(intent, null))
     }
 }
 

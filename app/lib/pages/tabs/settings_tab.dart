@@ -274,10 +274,27 @@ class SettingsTab extends StatelessWidget {
                   ),
               ],
             ),
-            if (vm.advanced)
-              _SettingsSection(
-                title: t.settingsTab.send.title,
-                children: [
+            _SettingsSection(
+              title: t.settingsTab.send.title,
+              children: [
+                _ButtonEntry(
+                  label: t.settingsTab.send.sendServerUrl,
+                  buttonLabel: vm.settings.sendServerUrl,
+                  onTap: () async {
+                    final url = await showDialog<String>(
+                      context: context,
+                      builder: (_) => _SendServerUrlDialog(initialUrl: vm.settings.sendServerUrl),
+                    );
+                    if (url == null || !context.mounted) {
+                      return;
+                    }
+
+                    final normalizedUrl = url.trim();
+                    vm.sendServerUrlController.text = normalizedUrl;
+                    await ref.notifier(settingsProvider).setSendServerUrl(normalizedUrl);
+                  },
+                ),
+                if (vm.advanced) ...[
                   _BooleanEntry(
                     label: t.settingsTab.send.shareViaLinkAutoAccept,
                     value: vm.settings.shareViaLinkAutoAccept,
@@ -293,7 +310,8 @@ class SettingsTab extends StatelessWidget {
                     },
                   ),
                 ],
-              ),
+              ],
+            ),
             _SettingsSection(
               title: t.settingsTab.network.title,
               children: [
@@ -609,6 +627,57 @@ class SettingsTab extends StatelessWidget {
   }
 }
 
+class _SendServerUrlDialog extends StatefulWidget {
+  final String initialUrl;
+
+  const _SendServerUrlDialog({required this.initialUrl});
+
+  @override
+  State<_SendServerUrlDialog> createState() => _SendServerUrlDialogState();
+}
+
+class _SendServerUrlDialogState extends State<_SendServerUrlDialog> {
+  late final TextEditingController _controller = TextEditingController(text: widget.initialUrl);
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(t.settingsTab.send.sendServerUrl),
+      content: SizedBox(
+        width: 520,
+        child: TextFormField(
+          controller: _controller,
+          keyboardType: TextInputType.url,
+          textInputAction: TextInputAction.done,
+          autofocus: true,
+          decoration: InputDecoration(labelText: t.settingsTab.send.sendServerUrl),
+          onFieldSubmitted: (_) => context.pop(_controller.text.trim()),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => context.pop(),
+          child: Text(t.general.cancel),
+        ),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            foregroundColor: Theme.of(context).colorScheme.onPrimary,
+          ),
+          onPressed: () => context.pop(_controller.text.trim()),
+          child: Text(t.general.confirm),
+        ),
+      ],
+    );
+  }
+}
+
 class _SettingsEntry extends StatelessWidget {
   final String label;
   final Widget child;
@@ -709,6 +778,8 @@ class _ButtonEntry extends StatelessWidget {
             buttonLabel,
             style: Theme.of(context).textTheme.titleMedium,
             textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ),

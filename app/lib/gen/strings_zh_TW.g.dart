@@ -215,6 +215,8 @@ class Translations$sendTab$zh_TW extends Translations$sendTab$en {
   @override
   String get nearbyDevices => '附近的裝置';
   @override
+  String get sendServer => '上傳至 Send Server';
+  @override
   String get thisDevice => '此裝置';
   @override
   String get scan => '尋找裝置';
@@ -916,6 +918,8 @@ class Translations$settingsTab$send$zh_TW extends Translations$settingsTab$send$
   // Translations
   @override
   String get title => '傳送';
+  @override
+  String get sendServerUrl => 'Send Server URL';
   @override
   String get shareViaLinkAutoAccept => '透過連結分享：自動同意接收要求';
   @override

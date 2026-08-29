@@ -29,6 +29,7 @@ class SettingsState with SettingsStateMappable {
   final bool minimizeToTray; // minimize to tray instead of exiting the app
   final bool https;
   final SendMode sendMode;
+  final String sendServerUrl;
   final bool saveWindowPlacement;
   final bool enableAnimations;
   final DeviceType? deviceType;
@@ -61,6 +62,7 @@ class SettingsState with SettingsStateMappable {
     required this.minimizeToTray,
     required this.https,
     required this.sendMode,
+    required this.sendServerUrl,
     required this.saveWindowPlacement,
     required this.enableAnimations,
     required this.deviceType,

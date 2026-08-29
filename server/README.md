@@ -1,3 +1,3 @@
 # LocalSend Signaling Server
 
-A signaling server for LocalSend. Using Rust and WebSockets.
+LocalSend 使用的 signaling server。以 Rust 與 WebSockets 實作。

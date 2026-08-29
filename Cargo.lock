@@ -2179,6 +2179,7 @@ checksum = "11d3d7f243d5c5a8b9bb5d6dd2b1602c0cb0b9db1621bafc7ed66e35ff9fe092"
 name = "localsend"
 version = "0.1.0"
 dependencies = [
+ "aes-gcm",
  "anyhow",
  "base64 0.23.0",
  "bytes",
@@ -2186,6 +2187,8 @@ dependencies = [
  "flate2",
  "form_urlencoded",
  "futures-util",
+ "hkdf",
+ "hmac",
  "http-body-util",
  "hyper",
  "hyper-util",
@@ -2201,6 +2204,7 @@ dependencies = [
  "rustls",
  "serde",
  "serde_json",
+ "sha2 0.10.9",
  "sha2 0.11.0",
  "socket2 0.6.5",
  "thiserror 2.0.19",
@@ -2214,6 +2218,7 @@ dependencies = [
  "tracing-subscriber",
  "tungstenite 0.30.0",
  "uuid",
+ "webpki-roots 1.0.9",
  "webrtc",
  "x509-parser 0.18.1",
 ]

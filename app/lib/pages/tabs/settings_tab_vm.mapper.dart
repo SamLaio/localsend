@@ -52,6 +52,13 @@ class SettingsTabVmMapper extends ClassMapperBase<SettingsTabVm> {
       v.multicastController;
   static const Field<SettingsTabVm, TextEditingController>
   _f$multicastController = Field('multicastController', _$multicastController);
+  static TextEditingController _$sendServerUrlController(SettingsTabVm v) =>
+      v.sendServerUrlController;
+  static const Field<SettingsTabVm, TextEditingController>
+  _f$sendServerUrlController = Field(
+    'sendServerUrlController',
+    _$sendServerUrlController,
+  );
   static SettingsState _$settings(SettingsTabVm v) => v.settings;
   static const Field<SettingsTabVm, SettingsState> _f$settings = Field(
     'settings',
@@ -189,6 +196,7 @@ class SettingsTabVmMapper extends ClassMapperBase<SettingsTabVm> {
     #portController: _f$portController,
     #timeoutController: _f$timeoutController,
     #multicastController: _f$multicastController,
+    #sendServerUrlController: _f$sendServerUrlController,
     #settings: _f$settings,
     #serverState: _f$serverState,
     #deviceInfo: _f$deviceInfo,
@@ -217,6 +225,7 @@ class SettingsTabVmMapper extends ClassMapperBase<SettingsTabVm> {
       portController: data.dec(_f$portController),
       timeoutController: data.dec(_f$timeoutController),
       multicastController: data.dec(_f$multicastController),
+      sendServerUrlController: data.dec(_f$sendServerUrlController),
       settings: data.dec(_f$settings),
       serverState: data.dec(_f$serverState),
       deviceInfo: data.dec(_f$deviceInfo),
@@ -310,6 +319,7 @@ abstract class SettingsTabVmCopyWith<$R, $In extends SettingsTabVm, $Out>
     TextEditingController? portController,
     TextEditingController? timeoutController,
     TextEditingController? multicastController,
+    TextEditingController? sendServerUrlController,
     SettingsState? settings,
     ServerState? serverState,
     DeviceInfoResult? deviceInfo,
@@ -360,6 +370,7 @@ class _SettingsTabVmCopyWithImpl<$R, $Out>
     TextEditingController? portController,
     TextEditingController? timeoutController,
     TextEditingController? multicastController,
+    TextEditingController? sendServerUrlController,
     SettingsState? settings,
     Object? serverState = $none,
     DeviceInfoResult? deviceInfo,
@@ -387,6 +398,8 @@ class _SettingsTabVmCopyWithImpl<$R, $Out>
       if (timeoutController != null) #timeoutController: timeoutController,
       if (multicastController != null)
         #multicastController: multicastController,
+      if (sendServerUrlController != null)
+        #sendServerUrlController: sendServerUrlController,
       if (settings != null) #settings: settings,
       if (serverState != $none) #serverState: serverState,
       if (deviceInfo != null) #deviceInfo: deviceInfo,
@@ -425,6 +438,10 @@ class _SettingsTabVmCopyWithImpl<$R, $Out>
     multicastController: data.get(
       #multicastController,
       or: $value.multicastController,
+    ),
+    sendServerUrlController: data.get(
+      #sendServerUrlController,
+      or: $value.sendServerUrlController,
     ),
     settings: data.get(#settings, or: $value.settings),
     serverState: data.get(#serverState, or: $value.serverState),

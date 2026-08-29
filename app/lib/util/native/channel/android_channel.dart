@@ -4,7 +4,7 @@ import 'package:logging/logging.dart';
 
 part 'android_channel.mapper.dart';
 
-const _methodChannel = MethodChannel('org.localsend.localsend_app/localsend');
+const _methodChannel = MethodChannel('com.samliao.localsend/localsend');
 final _logger = Logger('AndroidSaf');
 
 /// From Android 10 and above, we need to use the Storage Access Framework (SAF) to access files due to the scoped storage.
@@ -70,6 +70,12 @@ Future<void> openContentUri({
   _logger.info('Opening content URI: $uri');
   await _methodChannel.invokeMethod('openContentUri', {
     'uri': uri,
+  });
+}
+
+Future<void> shareTextAndroid({required String text}) async {
+  await _methodChannel.invokeMethod('shareText', {
+    'text': text,
   });
 }
 

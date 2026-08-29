@@ -1,1 +1,1 @@
-app/assets/CHANGELOG.md
+主要變更紀錄請見：`app/assets/CHANGELOG.md`

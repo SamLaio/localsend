@@ -71,6 +71,7 @@
     },
     "shareIntentInfo": "您也可以使用您的行動裝置中的「分享」功能更簡單地選取檔案。",
     "nearbyDevices": "附近的裝置",
+    "sendServer": "上傳至 Send Server",
     "thisDevice": "此裝置",
     "scan": "尋找裝置",
     "manualSending": "手動傳送",
@@ -126,6 +127,7 @@
     },
     "send": {
       "title": "傳送",
+      "sendServerUrl": "Send Server URL",
       "shareViaLinkAutoAccept": "透過連結分享：自動同意接收要求",
       "createChecksums": "傳送檔案時建立校驗碼"
     },
@@ -446,6 +448,24 @@
       "single": "傳送檔案給單一接收者；檔案傳輸完成後，系統會清除選取項目。",
       "multiple": "傳送檔案給多位接收者；檔案傳輸完成後，系統不會清除選取項目。",
       "link": "未安裝 LocalSend 的接收者可以在瀏覽器中開啟連結，以下載選取的檔案。"
+    },
+    "sendServerUpload": {
+      "title": "上傳至 Send Server",
+      "reloadConfig": "重新讀取設定",
+      "selectedFiles": "已選取 {files} 個檔案，總大小 {size}",
+      "anonymousLimit": "伺服器匿名上傳上限：{size}",
+      "sizeTooLarge": "已選檔案超過伺服器允許的匿名上傳大小。",
+      "urlChanged": "Server URL 已變更，請先重新讀取設定。",
+      "password": "密碼（選填）",
+      "downloadLimit": "下載次數",
+      "expireTime": "存活時間",
+      "upload": "上傳",
+      "share": "分享",
+      "minutes": "{n} 分鐘",
+      "hours": "{n} 小時",
+      "days": "{n} 天",
+      "months": "{n} 個月",
+      "years": "{n} 年"
     },
     "zoom": {
       "title": "網址"

@@ -1,6 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:localsend_isolates/src/isolate/child/discovery_isolate.dart';
 import 'package:localsend_isolates/src/isolate/child/main.dart';
+import 'package:localsend_isolates/src/isolate/child/send_server_upload_isolate.dart';
 import 'package:localsend_isolates/src/isolate/child/server_isolate.dart';
 import 'package:localsend_isolates/src/isolate/child/sync_provider.dart';
 import 'package:localsend_isolates/src/isolate/child/upload_isolate.dart';
@@ -20,12 +21,14 @@ class ParentIsolateState with ParentIsolateStateMappable {
   final IsolateConnector<IsolateTaskStreamResult<DiscoveryResult>, SendToIsolateData<IsolateTask<DiscoveryTask>>>? discovery;
   final IsolateConnector<IsolateTaskStreamResult<HttpUploadEvent>, SendToIsolateData<IsolateTask<BaseHttpUploadTask>>>? httpUpload;
   final IsolateConnector<IsolateTaskStreamResult<HttpServerEvent>, SendToIsolateData<IsolateTask<BaseHttpServerTask>>>? httpServer;
+  final IsolateConnector<IsolateTaskStreamResult<SendServerUploadEvent>, SendToIsolateData<IsolateTask<BaseSendServerUploadTask>>>? sendServerUpload;
 
   ParentIsolateState({
     required this.syncState,
     required this.discovery,
     required this.httpUpload,
     required this.httpServer,
+    required this.sendServerUpload,
   });
 
   static ParentIsolateState initial(SyncState syncState) => ParentIsolateState(
@@ -33,6 +36,7 @@ class ParentIsolateState with ParentIsolateStateMappable {
     discovery: null,
     httpUpload: null,
     httpServer: null,
+    sendServerUpload: null,
   );
 
   @override
@@ -88,10 +92,20 @@ class IsolateSetupAction extends AsyncReduxAction<IsolateController, ParentIsola
           ),
         );
 
+    final sendServerUpload =
+        await TypedIsolates.startIsolate<IsolateTaskStreamResult<SendServerUploadEvent>, SendToIsolateData<IsolateTask<BaseSendServerUploadTask>>, InitialData>(
+          task: setupSendServerUploadIsolate,
+          param: InitialData(
+            syncState: state.syncState,
+            logLevel: Logger.root.level,
+          ),
+        );
+
     return state.copyWith(
       discovery: discovery,
       httpUpload: httpUpload,
       httpServer: httpServer,
+      sendServerUpload: sendServerUpload,
     );
   }
 }
@@ -102,6 +116,7 @@ class IsolateDisposeAction extends ReduxAction<IsolateController, ParentIsolateS
     state.discovery?.isolate.kill();
     state.httpUpload?.isolate.kill();
     state.httpServer?.isolate.kill();
+    state.sendServerUpload?.isolate.kill();
     return state;
   }
 }

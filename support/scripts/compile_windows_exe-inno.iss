@@ -38,6 +38,7 @@ OutputDir={#ResultDir}
 OutputBaseFilename=localsend
 SetupIconFile={#PayloadDir}\logo.ico
 UninstallDisplayIcon={app}\{#MyAppExeName}
+MinVersion=10.0
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern

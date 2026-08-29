@@ -15,6 +15,7 @@ import 'package:localsend_isolates/rust/api/http.dart';
 import 'package:localsend_isolates/rust/api/logging.dart';
 import 'package:localsend_isolates/rust/api/metadata.dart';
 import 'package:localsend_isolates/rust/api/model.dart';
+import 'package:localsend_isolates/rust/api/send_server.dart';
 import 'package:localsend_isolates/rust/api/server.dart';
 import 'package:localsend_isolates/rust/api/stream.dart';
 import 'package:localsend_isolates/rust/api/webrtc.dart';
@@ -76,7 +77,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.12.0';
 
   @override
-  int get rustContentHash => -1979579466;
+  int get rustContentHash => 1043226596;
 
   static const kDefaultExternalLibraryLoaderConfig = ExternalLibraryLoaderConfig(
     stem: 'rust_lib_localsend_app',
@@ -271,6 +272,10 @@ abstract class RustLibApi extends BaseApi {
 
   Future<void> crateApiLoggingEnableDebugLogging();
 
+  BigInt crateApiSendServerEncryptedUploadSize({required BigInt size});
+
+  Future<SendServerConfig> crateApiSendServerFetchSendServerConfig({required String serverUrl});
+
   Future<KeyPair> crateApiCryptoGenerateKeyPair();
 
   Future<SecurityContext> crateApiCryptoGenerateSecurityContext();
@@ -312,6 +317,12 @@ abstract class RustLibApi extends BaseApi {
     required bool verifyChecksums,
     required WebParams web,
     String? showToken,
+  });
+
+  Stream<RsSendServerUploadEvent> crateApiSendServerUploadSendServer({
+    required List<RsSendServerFile> files,
+    required RsSendServerUploadOptions options,
+    required RsCancellationToken cancelToken,
   });
 
   Future<void> crateApiCryptoVerifyCert({required String cert, required String publicKey});
@@ -1858,12 +1869,62 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   );
 
   @override
+  BigInt crateApiSendServerEncryptedUploadSize({required BigInt size}) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_u_64(size, serializer);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 50)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_u_64,
+          decodeErrorData: null,
+        ),
+        constMeta: kCrateApiSendServerEncryptedUploadSizeConstMeta,
+        argValues: [size],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiSendServerEncryptedUploadSizeConstMeta => const TaskConstMeta(
+    debugName: 'encrypted_upload_size',
+    argNames: ['size'],
+  );
+
+  @override
+  Future<SendServerConfig> crateApiSendServerFetchSendServerConfig({required String serverUrl}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(serverUrl, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 51, port: port_);
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_send_server_config,
+          decodeErrorData: sse_decode_rs_send_server_error,
+        ),
+        constMeta: kCrateApiSendServerFetchSendServerConfigConstMeta,
+        argValues: [serverUrl],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiSendServerFetchSendServerConfigConstMeta => const TaskConstMeta(
+    debugName: 'fetch_send_server_config',
+    argNames: ['serverUrl'],
+  );
+
+  @override
   Future<KeyPair> crateApiCryptoGenerateKeyPair() {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 50, port: port_);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 52, port: port_);
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_key_pair,
@@ -1887,7 +1948,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       NormalTask(
         callFfi: (port_) {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 51, port: port_);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 53, port: port_);
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_security_context,
@@ -1918,7 +1979,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             sse_encode_opt_box_autoadd_i_32(fileDescriptor, serializer);
             sse_encode_opt_list_prim_u_8_strict(bytes, serializer);
             sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRsCancellationToken(cancelToken, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 52, port: port_);
+            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 54, port: port_);
           },
           codec: SseCodec(
             decodeSuccessData: sse_decode_unit,
@@ -1945,7 +2006,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_String(name, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 53)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 55)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_bool,
@@ -1970,7 +2031,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         callFfi: (port_) {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_String(path, serializer);
-          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 54, port: port_);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 56, port: port_);
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_opt_box_autoadd_file_metadata,
@@ -1995,7 +2056,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_String(name, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 55)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 57)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_String,
@@ -2048,7 +2109,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           sse_encode_String(certPem, serializer);
           sse_encode_String(privateKeyPem, serializer);
           sse_encode_u_64(timeoutMs, serializer);
-          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 56, port: port_);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 58, port: port_);
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRsDiscovery,
@@ -2125,7 +2186,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           sse_encode_bool(verifyChecksums, serializer);
           sse_encode_box_autoadd_web_params(web, serializer);
           sse_encode_opt_String(showToken, serializer);
-          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 57, port: port_);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 59, port: port_);
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRsHttpServer,
@@ -2144,6 +2205,42 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   );
 
   @override
+  Stream<RsSendServerUploadEvent> crateApiSendServerUploadSendServer({
+    required List<RsSendServerFile> files,
+    required RsSendServerUploadOptions options,
+    required RsCancellationToken cancelToken,
+  }) {
+    final sink = RustStreamSink<RsSendServerUploadEvent>();
+    unawaited(
+      handler.executeNormal(
+        NormalTask(
+          callFfi: (port_) {
+            final serializer = SseSerializer(generalizedFrbRustBinding);
+            sse_encode_StreamSink_rs_send_server_upload_event_Sse(sink, serializer);
+            sse_encode_list_rs_send_server_file(files, serializer);
+            sse_encode_box_autoadd_rs_send_server_upload_options(options, serializer);
+            sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRsCancellationToken(cancelToken, serializer);
+            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 60, port: port_);
+          },
+          codec: SseCodec(
+            decodeSuccessData: sse_decode_unit,
+            decodeErrorData: null,
+          ),
+          constMeta: kCrateApiSendServerUploadSendServerConstMeta,
+          argValues: [sink, files, options, cancelToken],
+          apiImpl: this,
+        ),
+      ),
+    );
+    return sink.stream;
+  }
+
+  TaskConstMeta get kCrateApiSendServerUploadSendServerConstMeta => const TaskConstMeta(
+    debugName: 'upload_send_server',
+    argNames: ['sink', 'files', 'options', 'cancelToken'],
+  );
+
+  @override
   Future<void> crateApiCryptoVerifyCert({required String cert, required String publicKey}) {
     return handler.executeNormal(
       NormalTask(
@@ -2151,7 +2248,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_String(cert, serializer);
           sse_encode_String(publicKey, serializer);
-          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 58, port: port_);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 61, port: port_);
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -2529,6 +2626,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  RustStreamSink<RsSendServerUploadEvent> dco_decode_StreamSink_rs_send_server_upload_event_Sse(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    throw UnimplementedError();
+  }
+
+  @protected
   RustStreamSink<RsServerEvent> dco_decode_StreamSink_rs_server_event_Sse(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     throw UnimplementedError();
@@ -2678,6 +2781,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   RsHttpClientError dco_decode_box_autoadd_rs_http_client_error(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_rs_http_client_error(raw);
+  }
+
+  @protected
+  RsSendServerError dco_decode_box_autoadd_rs_send_server_error(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_rs_send_server_error(raw);
+  }
+
+  @protected
+  RsSendServerUploadOptions dco_decode_box_autoadd_rs_send_server_upload_options(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_rs_send_server_upload_options(raw);
   }
 
   @protected
@@ -2837,6 +2952,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  Uint64List dco_decode_list_prim_u_64_strict(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dcoDecodeUint64List(raw);
+  }
+
+  @protected
   List<int> dco_decode_list_prim_u_8_loose(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as List<int>;
@@ -2870,6 +2991,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   List<RsDeviceLog> dco_decode_list_rs_device_log(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_rs_device_log).toList();
+  }
+
+  @protected
+  List<RsSendServerFile> dco_decode_list_rs_send_server_file(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_rs_send_server_file).toList();
   }
 
   @protected
@@ -3208,6 +3335,94 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  RsSendServerError dco_decode_rs_send_server_error(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    switch (raw[0]) {
+      case 0:
+        return RsSendServerError_InvalidUrl();
+      case 1:
+        return RsSendServerError_Status(
+          status: dco_decode_u_16(raw[1]),
+        );
+      case 2:
+        return RsSendServerError_InvalidResponse(
+          dco_decode_String(raw[1]),
+        );
+      case 3:
+        return RsSendServerError_Network(
+          dco_decode_String(raw[1]),
+        );
+      case 4:
+        return RsSendServerError_Io(
+          dco_decode_String(raw[1]),
+        );
+      case 5:
+        return RsSendServerError_Cancelled();
+      case 6:
+        return RsSendServerError_Crypto();
+      case 7:
+        return RsSendServerError_Other(
+          dco_decode_String(raw[1]),
+        );
+      default:
+        throw Exception('unreachable');
+    }
+  }
+
+  @protected
+  RsSendServerFile dco_decode_rs_send_server_file(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 6) throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
+    return RsSendServerFile(
+      name: dco_decode_String(arr[0]),
+      size: dco_decode_u_64(arr[1]),
+      mime: dco_decode_opt_String(arr[2]),
+      filePath: dco_decode_opt_String(arr[3]),
+      fileBytes: dco_decode_opt_list_prim_u_8_strict(arr[4]),
+      fileDescriptor: dco_decode_opt_box_autoadd_i_32(arr[5]),
+    );
+  }
+
+  @protected
+  RsSendServerUploadEvent dco_decode_rs_send_server_upload_event(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    switch (raw[0]) {
+      case 0:
+        return RsSendServerUploadEvent_Progress(
+          sent: dco_decode_u_64(raw[1]),
+          total: dco_decode_u_64(raw[2]),
+          progress: dco_decode_f_64(raw[3]),
+        );
+      case 1:
+        return RsSendServerUploadEvent_Finished(
+          id: dco_decode_String(raw[1]),
+          url: dco_decode_String(raw[2]),
+          password: dco_decode_opt_String(raw[3]),
+        );
+      case 2:
+        return RsSendServerUploadEvent_Failed(
+          error: dco_decode_box_autoadd_rs_send_server_error(raw[1]),
+        );
+      default:
+        throw Exception('unreachable');
+    }
+  }
+
+  @protected
+  RsSendServerUploadOptions dco_decode_rs_send_server_upload_options(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 4) throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
+    return RsSendServerUploadOptions(
+      serverUrl: dco_decode_String(arr[0]),
+      password: dco_decode_opt_String(arr[1]),
+      downloadLimit: dco_decode_u_64(arr[2]),
+      expireSeconds: dco_decode_u_64(arr[3]),
+    );
+  }
+
+  @protected
   RsServerEvent dco_decode_rs_server_event(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     switch (raw[0]) {
@@ -3362,6 +3577,51 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       publicKey: dco_decode_String(arr[1]),
       certificate: dco_decode_String(arr[2]),
       certificateHash: dco_decode_String(arr[3]),
+    );
+  }
+
+  @protected
+  SendServerAnonLimits dco_decode_send_server_anon_limits(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3) throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return SendServerAnonLimits(
+      maxFileSize: dco_decode_u_64(arr[0]),
+      maxDownloads: dco_decode_u_64(arr[1]),
+      maxExpireSeconds: dco_decode_u_64(arr[2]),
+    );
+  }
+
+  @protected
+  SendServerConfig dco_decode_send_server_config(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2) throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return SendServerConfig(
+      limits: dco_decode_send_server_limits(arr[0]),
+      defaults: dco_decode_send_server_defaults(arr[1]),
+    );
+  }
+
+  @protected
+  SendServerDefaults dco_decode_send_server_defaults(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3) throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return SendServerDefaults(
+      downloadCounts: dco_decode_list_prim_u_64_strict(arr[0]),
+      expireTimesSeconds: dco_decode_list_prim_u_64_strict(arr[1]),
+      expireSeconds: dco_decode_u_64(arr[2]),
+    );
+  }
+
+  @protected
+  SendServerLimits dco_decode_send_server_limits(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 1) throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
+    return SendServerLimits(
+      anon: dco_decode_send_server_anon_limits(arr[0]),
     );
   }
 
@@ -3816,6 +4076,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  RustStreamSink<RsSendServerUploadEvent> sse_decode_StreamSink_rs_send_server_upload_event_Sse(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    throw UnimplementedError('Unreachable ()');
+  }
+
+  @protected
   RustStreamSink<RsServerEvent> sse_decode_StreamSink_rs_server_event_Sse(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     throw UnimplementedError('Unreachable ()');
@@ -3967,6 +4233,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   RsHttpClientError sse_decode_box_autoadd_rs_http_client_error(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_rs_http_client_error(deserializer));
+  }
+
+  @protected
+  RsSendServerError sse_decode_box_autoadd_rs_send_server_error(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_rs_send_server_error(deserializer));
+  }
+
+  @protected
+  RsSendServerUploadOptions sse_decode_box_autoadd_rs_send_server_upload_options(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_rs_send_server_upload_options(deserializer));
   }
 
   @protected
@@ -4136,6 +4414,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  Uint64List sse_decode_list_prim_u_64_strict(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var len_ = sse_decode_i_32(deserializer);
+    return deserializer.buffer.getUint64List(len_);
+  }
+
+  @protected
   List<int> sse_decode_list_prim_u_8_loose(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var len_ = sse_decode_i_32(deserializer);
@@ -4193,6 +4478,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var ans_ = <RsDeviceLog>[];
     for (var idx_ = 0; idx_ < len_; ++idx_) {
       ans_.add(sse_decode_rs_device_log(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<RsSendServerFile> sse_decode_list_rs_send_server_file(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <RsSendServerFile>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_rs_send_server_file(deserializer));
     }
     return ans_;
   }
@@ -4576,6 +4873,96 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  RsSendServerError sse_decode_rs_send_server_error(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var tag_ = sse_decode_i_32(deserializer);
+    switch (tag_) {
+      case 0:
+        return RsSendServerError_InvalidUrl();
+      case 1:
+        var var_status = sse_decode_u_16(deserializer);
+        return RsSendServerError_Status(status: var_status);
+      case 2:
+        var var_field0 = sse_decode_String(deserializer);
+        return RsSendServerError_InvalidResponse(var_field0);
+      case 3:
+        var var_field0 = sse_decode_String(deserializer);
+        return RsSendServerError_Network(var_field0);
+      case 4:
+        var var_field0 = sse_decode_String(deserializer);
+        return RsSendServerError_Io(var_field0);
+      case 5:
+        return RsSendServerError_Cancelled();
+      case 6:
+        return RsSendServerError_Crypto();
+      case 7:
+        var var_field0 = sse_decode_String(deserializer);
+        return RsSendServerError_Other(var_field0);
+      default:
+        throw UnimplementedError('');
+    }
+  }
+
+  @protected
+  RsSendServerFile sse_decode_rs_send_server_file(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_name = sse_decode_String(deserializer);
+    var var_size = sse_decode_u_64(deserializer);
+    var var_mime = sse_decode_opt_String(deserializer);
+    var var_filePath = sse_decode_opt_String(deserializer);
+    var var_fileBytes = sse_decode_opt_list_prim_u_8_strict(deserializer);
+    var var_fileDescriptor = sse_decode_opt_box_autoadd_i_32(deserializer);
+    return RsSendServerFile(
+      name: var_name,
+      size: var_size,
+      mime: var_mime,
+      filePath: var_filePath,
+      fileBytes: var_fileBytes,
+      fileDescriptor: var_fileDescriptor,
+    );
+  }
+
+  @protected
+  RsSendServerUploadEvent sse_decode_rs_send_server_upload_event(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var tag_ = sse_decode_i_32(deserializer);
+    switch (tag_) {
+      case 0:
+        var var_sent = sse_decode_u_64(deserializer);
+        var var_total = sse_decode_u_64(deserializer);
+        var var_progress = sse_decode_f_64(deserializer);
+        return RsSendServerUploadEvent_Progress(sent: var_sent, total: var_total, progress: var_progress);
+      case 1:
+        var var_id = sse_decode_String(deserializer);
+        var var_url = sse_decode_String(deserializer);
+        var var_password = sse_decode_opt_String(deserializer);
+        return RsSendServerUploadEvent_Finished(id: var_id, url: var_url, password: var_password);
+      case 2:
+        var var_error = sse_decode_box_autoadd_rs_send_server_error(deserializer);
+        return RsSendServerUploadEvent_Failed(error: var_error);
+      default:
+        throw UnimplementedError('');
+    }
+  }
+
+  @protected
+  RsSendServerUploadOptions sse_decode_rs_send_server_upload_options(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_serverUrl = sse_decode_String(deserializer);
+    var var_password = sse_decode_opt_String(deserializer);
+    var var_downloadLimit = sse_decode_u_64(deserializer);
+    var var_expireSeconds = sse_decode_u_64(deserializer);
+    return RsSendServerUploadOptions(
+      serverUrl: var_serverUrl,
+      password: var_password,
+      downloadLimit: var_downloadLimit,
+      expireSeconds: var_expireSeconds,
+    );
+  }
+
+  @protected
   RsServerEvent sse_decode_rs_server_event(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
@@ -4726,6 +5113,39 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_certificate = sse_decode_String(deserializer);
     var var_certificateHash = sse_decode_String(deserializer);
     return SecurityContext(privateKey: var_privateKey, publicKey: var_publicKey, certificate: var_certificate, certificateHash: var_certificateHash);
+  }
+
+  @protected
+  SendServerAnonLimits sse_decode_send_server_anon_limits(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_maxFileSize = sse_decode_u_64(deserializer);
+    var var_maxDownloads = sse_decode_u_64(deserializer);
+    var var_maxExpireSeconds = sse_decode_u_64(deserializer);
+    return SendServerAnonLimits(maxFileSize: var_maxFileSize, maxDownloads: var_maxDownloads, maxExpireSeconds: var_maxExpireSeconds);
+  }
+
+  @protected
+  SendServerConfig sse_decode_send_server_config(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_limits = sse_decode_send_server_limits(deserializer);
+    var var_defaults = sse_decode_send_server_defaults(deserializer);
+    return SendServerConfig(limits: var_limits, defaults: var_defaults);
+  }
+
+  @protected
+  SendServerDefaults sse_decode_send_server_defaults(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_downloadCounts = sse_decode_list_prim_u_64_strict(deserializer);
+    var var_expireTimesSeconds = sse_decode_list_prim_u_64_strict(deserializer);
+    var var_expireSeconds = sse_decode_u_64(deserializer);
+    return SendServerDefaults(downloadCounts: var_downloadCounts, expireTimesSeconds: var_expireTimesSeconds, expireSeconds: var_expireSeconds);
+  }
+
+  @protected
+  SendServerLimits sse_decode_send_server_limits(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_anon = sse_decode_send_server_anon_limits(deserializer);
+    return SendServerLimits(anon: var_anon);
   }
 
   @protected
@@ -5252,6 +5672,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_StreamSink_rs_send_server_upload_event_Sse(RustStreamSink<RsSendServerUploadEvent> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(
+      self.setupAndSerialize(
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_rs_send_server_upload_event,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+      ),
+      serializer,
+    );
+  }
+
+  @protected
   void sse_encode_StreamSink_rs_server_event_Sse(RustStreamSink<RsServerEvent> self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_String(
@@ -5453,6 +5887,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_box_autoadd_rs_send_server_error(RsSendServerError self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_rs_send_server_error(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_rs_send_server_upload_options(RsSendServerUploadOptions self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_rs_send_server_upload_options(self, serializer);
+  }
+
+  @protected
   void sse_encode_box_autoadd_rtc_send_file_response(RTCSendFileResponse self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_rtc_send_file_response(self, serializer);
@@ -5594,6 +6040,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_list_prim_u_64_strict(Uint64List self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    serializer.buffer.putUint64List(self);
+  }
+
+  @protected
   void sse_encode_list_prim_u_8_loose(List<int> self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.length, serializer);
@@ -5640,6 +6093,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_i_32(self.length, serializer);
     for (final item in self) {
       sse_encode_rs_device_log(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_rs_send_server_file(List<RsSendServerFile> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_rs_send_server_file(item, serializer);
     }
   }
 
@@ -5951,6 +6413,74 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_rs_send_server_error(RsSendServerError self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    switch (self) {
+      case RsSendServerError_InvalidUrl():
+        sse_encode_i_32(0, serializer);
+      case RsSendServerError_Status(status: final status):
+        sse_encode_i_32(1, serializer);
+        sse_encode_u_16(status, serializer);
+      case RsSendServerError_InvalidResponse(field0: final field0):
+        sse_encode_i_32(2, serializer);
+        sse_encode_String(field0, serializer);
+      case RsSendServerError_Network(field0: final field0):
+        sse_encode_i_32(3, serializer);
+        sse_encode_String(field0, serializer);
+      case RsSendServerError_Io(field0: final field0):
+        sse_encode_i_32(4, serializer);
+        sse_encode_String(field0, serializer);
+      case RsSendServerError_Cancelled():
+        sse_encode_i_32(5, serializer);
+      case RsSendServerError_Crypto():
+        sse_encode_i_32(6, serializer);
+      case RsSendServerError_Other(field0: final field0):
+        sse_encode_i_32(7, serializer);
+        sse_encode_String(field0, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_rs_send_server_file(RsSendServerFile self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.name, serializer);
+    sse_encode_u_64(self.size, serializer);
+    sse_encode_opt_String(self.mime, serializer);
+    sse_encode_opt_String(self.filePath, serializer);
+    sse_encode_opt_list_prim_u_8_strict(self.fileBytes, serializer);
+    sse_encode_opt_box_autoadd_i_32(self.fileDescriptor, serializer);
+  }
+
+  @protected
+  void sse_encode_rs_send_server_upload_event(RsSendServerUploadEvent self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    switch (self) {
+      case RsSendServerUploadEvent_Progress(sent: final sent, total: final total, progress: final progress):
+        sse_encode_i_32(0, serializer);
+        sse_encode_u_64(sent, serializer);
+        sse_encode_u_64(total, serializer);
+        sse_encode_f_64(progress, serializer);
+      case RsSendServerUploadEvent_Finished(id: final id, url: final url, password: final password):
+        sse_encode_i_32(1, serializer);
+        sse_encode_String(id, serializer);
+        sse_encode_String(url, serializer);
+        sse_encode_opt_String(password, serializer);
+      case RsSendServerUploadEvent_Failed(error: final error):
+        sse_encode_i_32(2, serializer);
+        sse_encode_box_autoadd_rs_send_server_error(error, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_rs_send_server_upload_options(RsSendServerUploadOptions self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.serverUrl, serializer);
+    sse_encode_opt_String(self.password, serializer);
+    sse_encode_u_64(self.downloadLimit, serializer);
+    sse_encode_u_64(self.expireSeconds, serializer);
+  }
+
+  @protected
   void sse_encode_rs_server_event(RsServerEvent self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     switch (self) {
@@ -6077,6 +6607,35 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_String(self.publicKey, serializer);
     sse_encode_String(self.certificate, serializer);
     sse_encode_String(self.certificateHash, serializer);
+  }
+
+  @protected
+  void sse_encode_send_server_anon_limits(SendServerAnonLimits self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_u_64(self.maxFileSize, serializer);
+    sse_encode_u_64(self.maxDownloads, serializer);
+    sse_encode_u_64(self.maxExpireSeconds, serializer);
+  }
+
+  @protected
+  void sse_encode_send_server_config(SendServerConfig self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_send_server_limits(self.limits, serializer);
+    sse_encode_send_server_defaults(self.defaults, serializer);
+  }
+
+  @protected
+  void sse_encode_send_server_defaults(SendServerDefaults self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_list_prim_u_64_strict(self.downloadCounts, serializer);
+    sse_encode_list_prim_u_64_strict(self.expireTimesSeconds, serializer);
+    sse_encode_u_64(self.expireSeconds, serializer);
+  }
+
+  @protected
+  void sse_encode_send_server_limits(SendServerLimits self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_send_server_anon_limits(self.anon, serializer);
   }
 
   @protected

@@ -136,7 +136,10 @@ impl App {
                     let _ = decision_tx.send(PrepareUploadDecisionV2::Accept(HashSet::new()));
                     self.ui.log(
                         Category::Receive,
-                        &format!("{alias}: Message received\n{}", sanitize::multi_line(message)),
+                        &format!(
+                            "{alias}: Message received\n{}",
+                            sanitize::multi_line(message)
+                        ),
                     );
                     return;
                 }

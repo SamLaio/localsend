@@ -7,7 +7,9 @@ allprojects {
 
 rootProject.buildDir = '../build'
 subprojects {
-    project.buildDir = "${rootProject.buildDir}/${project.name}"
+    if (project.projectDir.toPath().root == rootProject.projectDir.toPath().root) {
+        project.buildDir = "${rootProject.buildDir}/${project.name}"
+    }
 }
 
 // temporary fix to keep using device_apps

@@ -1,20 +1,20 @@
-# Contributing to LocalSend
+# LocalSend 貢獻指南
 
-LocalSend is an open-source project, and we welcome contributions from anyone who is interested in helping improve the app. Whether you're a developer, a translator, or a documentation writer, there are many ways to get involved.
+LocalSend 是 open-source project，歡迎任何有興趣協助改善 app 的人貢獻。無論你是 developer、translator，或 documentation writer，都有許多參與方式。
 
-LocalSend disallows AI generated contributions unless:
+LocalSend 不接受 AI 產生的貢獻，除非：
 
-- they are bug fixes or
-- very small or
-- you prove your expertise in your field
+- 是 bug 修正，或
+- 範圍非常小，或
+- 你能證明自己具備相關領域的專業能力。
 
-## Getting Started
+## 開始使用
 
-If you're interested in contributing code to LocalSend, you'll need to follow these steps:
+若你想為 LocalSend 貢獻 code，請先依照下列步驟準備。
 
-## Run
+## 執行
 
-After you have installed [Flutter](https://flutter.dev), then you can start this app by typing the following commands:
+安裝 [Flutter](https://flutter.dev) 後，可以輸入下列 commands 啟動 app：
 
 ```shell
 cd app
@@ -23,58 +23,58 @@ dart run build_runner build -d
 flutter run
 ```
 
-## Translation
+## 翻譯
 
-You can help in translating this app to other languages!
+你可以協助把這個 app 翻譯成其他語言。
 
-1. Fork this repository
-2. Choose one
-   - Add missing translations in existing languages: Only update `_missing_translations_<locale>.json` in [assets/i18n](https://github.com/localsend/localsend/tree/main/app/assets/i18n)
-   - Fix existing translations: Update `strings_<locale>.i18n.json` in [assets/i18n](https://github.com/localsend/localsend/tree/main/app/assets/i18n)
-   - Add new languages: Create a new file, see also: [locale codes](https://saimana.com/list-of-country-locale-code/).
-3. Optional: Re-run this app
-   1. Run `cd app` to enter the app directory.
-   2. Make sure you have [run](#run) this app once.
-   3. Update translations via `flutter pub run slang`
-   4. Run the app via `flutter run`
-4. Open a pull request
+1. Fork 此 repository。
+2. 選擇一種方式：
+   - 在既有語言中補上 missing translations：只更新 [assets/i18n](https://github.com/localsend/localsend/tree/main/app/assets/i18n) 中的 `_missing_translations_<locale>.json`。
+   - 修正既有 translations：更新 [assets/i18n](https://github.com/localsend/localsend/tree/main/app/assets/i18n) 中的 `strings_<locale>.i18n.json`。
+   - 新增語言：建立新檔案，另見 [locale codes](https://saimana.com/list-of-country-locale-code/)。
+3. Optional：重新執行 app。
+   1. 執行 `cd app` 進入 app 目錄。
+   2. 確認你已依 [執行](#執行) 章節跑過一次 app。
+   3. 透過 `flutter pub run slang` 更新 translations。
+   4. 透過 `flutter run` 執行 app。
+4. 開啟 pull request。
 
-**_Take note:_ Fields decorated with `@` are not meant to be translated, they are not used in the app in any way, being merely informative text about the file or to give context to the translator.**
+**_注意：_ 以 `@` 裝飾的 fields 不需要翻譯；它們不會以任何方式被 app 使用，只是關於檔案的資訊或給譯者的 context。**
 
-Thanks to all [translators](https://github.com/localsend/localsend/tree/main/app/lib/pages/about/translators.dart)!
+感謝所有 [translators](https://github.com/localsend/localsend/tree/main/app/lib/pages/about/translators.dart)。
 
-## Contributing Guidelines
+## 貢獻準則
 
-Before you submit a pull request to LocalSend, please ensure that you have followed these guidelines:
+提交 pull request 到 LocalSend 前，請確認你已遵守下列準則：
 
-- Code should be well-documented and formatted according to the [Dart Style Guide](https://dart.dev/guides/language/effective-dart/style).
-- All changes should be covered by tests.
-- Commits should be well-written and descriptive, with a clear summary of the changes made and any relevant context.
-- Pull requests should target the `main` branch and include a clear summary of the changes made.
+- Code 應有適當 documentation，並依照 [Dart Style Guide](https://dart.dev/guides/language/effective-dart/style) 格式化。
+- 所有變更都應有 tests 覆蓋。
+- Commits 應清楚、具描述性，包含變更摘要與相關 context。
+- Pull requests 應以 `main` branch 為目標，並包含清楚的變更摘要。
 
-## Bug Reports and Feature Requests
+## Bug 回報與功能請求
 
-If you encounter a bug in LocalSend or have a feature request, please submit an issue to the [issue tracker](https://github.com/localsend/localsend/issues). Please be sure to provide a clear description of the problem or feature request, along with any relevant context or steps to reproduce the issue.
+如果你在 LocalSend 遇到 bug，或有 feature request，請在 [issue tracker](https://github.com/localsend/localsend/issues) 提交 issue。請務必提供清楚的問題或 feature request 描述，以及相關 context 或重現步驟。
 
-## Security Issues
+## 安全性問題
 
-If you discover a security issue in LocalSend, please do not submit an issue to the public issue tracker. Instead, please email us directly at [support@localsend.org](mailto:support@localsend.org) so that we can address the issue as quickly and effectively as possible.
+如果你發現 LocalSend 的 security issue，請不要提交到公開 issue tracker。請直接寄信到 [support@localsend.org](mailto:support@localsend.org)，讓我們能盡快且有效地處理。
 
-## Distribution
+## 散布通路
 
-Git based distribution:
+Git-based 散布：
 
-| Channel        | Repository          | Maintainer                                         |
-|----------------|---------------------|----------------------------------------------------|
-| [Winget][]     | [Winget Repo][]     | [@sitiom][], [@Tienisto], Github Actions           |
-| [Scoop][]      | [Scoop Repo][]      | [@sitiom][], [@Tienisto], Github Actions           |
-| [Chocolatey][] | [Chocolatey Repo][] | [@brogers5][]                                      |
-| [Homebrew][]   | [Homebrew Repo][]   | [@Tienisto][], Github Actions                      |
-| [Flathub][]    | [Flathub Repo][]    | [@proletarius101][], [@Tienisto][], Github Actions |
-| [AUR][]        | [AUR Repo][]        | [@Nixuge][]                                        |
-| [Nixpkgs][]    | [Nixpkgs Repo][]    | [@sikmir][], [@linsui][]                           |
-| [F-Droid][]    | [F-Droid Repo][]    | [@linsui][], [@Tienisto][], [F-Droid CI][]         |
-| [Snap][]       | [Snap Repo][]       | [@thatLeaflet][]                                   |
+| Channel | Repository | Maintainer |
+|---|---|---|
+| [Winget][] | [Winget Repo][] | [@sitiom][], [@Tienisto], Github Actions |
+| [Scoop][] | [Scoop Repo][] | [@sitiom][], [@Tienisto], Github Actions |
+| [Chocolatey][] | [Chocolatey Repo][] | [@brogers5][] |
+| [Homebrew][] | [Homebrew Repo][] | [@Tienisto][], Github Actions |
+| [Flathub][] | [Flathub Repo][] | [@proletarius101][], [@Tienisto][], Github Actions |
+| [AUR][] | [AUR Repo][] | [@Nixuge][] |
+| [Nixpkgs][] | [Nixpkgs Repo][] | [@sikmir][], [@linsui][] |
+| [F-Droid][] | [F-Droid Repo][] | [@linsui][], [@Tienisto][], [F-Droid CI][] |
+| [Snap][] | [Snap Repo][] | [@thatLeaflet][] |
 
 [winget]: https://github.com/microsoft/winget-pkgs/tree/master/manifests/l/LocalSend/LocalSend
 [winget repo]: https://github.com/microsoft/winget-pkgs/tree/master/manifests/l/LocalSend/LocalSend
@@ -95,30 +95,30 @@ Git based distribution:
 [snap]: https://snapcraft.io/localsend
 [snap repo]: https://github.com/localsend/snap
 
-Manual distribution:
+手動散布：
 
-| Channel        | Maintainer                               |
-|----------------|------------------------------------------|
-| [App Store][]  | [@Tienisto](https://github.com/Tienisto) |
+| Channel | Maintainer |
+|---|---|
+| [App Store][] | [@Tienisto](https://github.com/Tienisto) |
 | [Play Store][] | [@Tienisto](https://github.com/Tienisto) |
-| [Amazon][]     | [@Tienisto](https://github.com/Tienisto) |
+| [Amazon][] | [@Tienisto](https://github.com/Tienisto) |
 
 [app store]: https://apps.apple.com/us/app/localsend/id1661733229
 [play store]: https://play.google.com/store/apps/details?id=org.localsend.localsend_app
 [amazon]: https://www.amazon.com/dp/B0BW6MP732
 
-Binary distribution:
+Binary 散布：
 
-| Type        | Maintainer    | Credits                      |
-|-------------|---------------|------------------------------|
-| Windows ZIP | [@Tienisto][] |                              |
-| MSIX        | [@Tienisto][] |                              |
-| EXE         | [@Tienisto][] |                              |
-| APK         | [@Tienisto][] |                              |
-| TAR         | [@Tienisto][] |                              |
-| DEB         | [@Tienisto][] |                              |
-| AppImage    | [@Tienisto][] | [@TheGB0077][]               |
-| DMG         | [@Tienisto][] |                              |
+| Type | Maintainer | Credits |
+|---|---|---|
+| Windows ZIP | [@Tienisto][] | |
+| MSIX | [@Tienisto][] | |
+| EXE | [@Tienisto][] | |
+| APK | [@Tienisto][] | |
+| TAR | [@Tienisto][] | |
+| DEB | [@Tienisto][] | |
+| AppImage | [@Tienisto][] | [@TheGB0077][] |
+| DMG | [@Tienisto][] | |
 
 [@Tienisto]: https://github.com/Tienisto
 [@TheGB0077]: https://github.com/TheGB0077
@@ -131,22 +131,22 @@ Binary distribution:
 [@thatLeaflet]: https://github.com/thatLeaflet
 [F-Droid CI]: https://gitlab.com/fdroidci
 
-TODO:
+待辦：
 
-You can help in publishing LocalSend on more platforms. Please create an issue to notify us!
+你可以協助把 LocalSend 發布到更多 platforms。請建立 issue 通知我們。
 
-- Traditional Linux distributions (Debian, Fedora, etc.)
-- (Your idea here)
+- Traditional Linux distributions，例如 Debian、Fedora 等。
+- 你的想法。
 
-## Notes
+## 筆記
 
-Useful notes.
+實用筆記。
 
-### Compile production APK
+### 編譯 production APK
 
-You will need the signing keys to generate an APK.
+產生 APK 需要 signing keys。
 
-Either generate one or use the debug signing options:
+你可以產生自己的 keys，或使用 debug signing options：
 
 ```groovy
 // File: android/app/build.gradle
@@ -157,29 +157,29 @@ buildTypes {
 }
 ```
 
-### Bump Flutter
+### 升級 Flutter
 
-Suppose we want to update flutter to `3.41.9`:
+假設要把 Flutter 更新到 `3.41.9`：
 
-1. Update flutter from fvm: `fvm use 3.41.9`
-2. Update flutter from submodule:
+1. 用 fvm 更新 Flutter：`fvm use 3.41.9`
+2. 更新 Flutter submodule：
    1. `git submodule update --init`
    2. `cd support/submodules/flutter`
    3. `git fetch`
    4. `git checkout 3.41.9`
    5. `cd ../../..`
    6. `git add support/submodules/flutter`
-3. Update flutter constraints:
-   1. In CI: `.github/workflows/ci.yml`
-   2. In pubspec: `pubspec.yaml`
+3. 更新 Flutter constraints：
+   1. CI: `.github/workflows/ci.yml`
+   2. pubspec: `pubspec.yaml`
 
-### Release
+### 發版
 
-Make sure to set up the self-hosted runner to compile arm64 linux binaries.
+請確認已設定 self-hosted runner，用來編譯 arm64 linux binaries。
 
-To set up the runner, follow the following instructions:
+依照下列說明設定 runner：
 
-Install Flutter
+安裝 Flutter
 
 ```bash
 sudo apt install git
@@ -187,20 +187,20 @@ git clone https://github.com/flutter/flutter.git $HOME/flutter
 nano $HOME/.bashrc
 ```
 
-Add the following to the end of the file:
+將下列內容加入檔案結尾：
 
 ```bash
 export PATH="$PATH:$HOME/flutter/bin"
 ```
 
-Restart the terminal.
+重新啟動 terminal。
 
 ```bash
 flutter doctor
 ```
 
-Next, follow the instructions to set up the GitHub runner.
+接著依照說明設定 GitHub runner。
 
-Start the "Release Draft" workflow from the "Actions" tab: https://github.com/localsend/localsend/actions/workflows/release.yml
+從 "Actions" tab 啟動 "Release Draft" workflow：https://github.com/localsend/localsend/actions/workflows/release.yml
 
-Finally, compile binaries not yet supported by the pipeline.
+最後，編譯 pipeline 尚未支援的 binaries。

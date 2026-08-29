@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:localsend_isolates/model/device.dart';
 import 'package:localsend_isolates/rust/api/server.dart' show WebParams;
 import 'package:localsend_isolates/src/isolate/child/discovery_isolate.dart';
+import 'package:localsend_isolates/src/isolate/child/send_server_upload_isolate.dart';
 import 'package:localsend_isolates/src/isolate/child/server_isolate.dart';
 import 'package:localsend_isolates/src/isolate/child/upload_isolate.dart';
 import 'package:localsend_isolates/src/isolate/dto/send_to_isolate_data.dart';
@@ -228,6 +229,105 @@ class IsolateHttpUploadActionResult {
     required this.taskId,
     required this.events,
   });
+}
+
+class IsolateSendServerTaskResult {
+  final int taskId;
+  final Stream<SendServerUploadEvent> events;
+
+  IsolateSendServerTaskResult({
+    required this.taskId,
+    required this.events,
+  });
+}
+
+class IsolateSendServerFetchConfigAction extends ReduxActionWithResult<IsolateController, ParentIsolateState, IsolateSendServerTaskResult> {
+  final String serverUrl;
+
+  IsolateSendServerFetchConfigAction({
+    required this.serverUrl,
+  });
+
+  @override
+  (ParentIsolateState, IsolateSendServerTaskResult) reduce() {
+    final connection = state.sendServerUpload;
+    if (connection == null) {
+      throw StateError('sendServerUpload is not initialized');
+    }
+
+    final taskId = IdProvider.instance.getNextId();
+    final events = connection.sendWrappedTaskAndListenStream(
+      task: SendServerFetchConfigTask(serverUrl: serverUrl),
+      taskId: taskId,
+    );
+
+    return (state, IsolateSendServerTaskResult(taskId: taskId, events: events));
+  }
+}
+
+class IsolateSendServerUploadFilesAction extends ReduxActionWithResult<IsolateController, ParentIsolateState, IsolateSendServerTaskResult> {
+  final String serverUrl;
+  final String? password;
+  final int downloadLimit;
+  final int expireSeconds;
+  final List<SendServerUploadFile> files;
+
+  IsolateSendServerUploadFilesAction({
+    required this.serverUrl,
+    required this.password,
+    required this.downloadLimit,
+    required this.expireSeconds,
+    required this.files,
+  });
+
+  @override
+  (ParentIsolateState, IsolateSendServerTaskResult) reduce() {
+    final connection = state.sendServerUpload;
+    if (connection == null) {
+      throw StateError('sendServerUpload is not initialized');
+    }
+
+    final taskId = IdProvider.instance.getNextId();
+    final events = connection.sendWrappedTaskAndListenStream(
+      task: SendServerUploadFilesTask(
+        serverUrl: serverUrl,
+        password: password,
+        downloadLimit: downloadLimit,
+        expireSeconds: expireSeconds,
+        files: files,
+      ),
+      taskId: taskId,
+    );
+
+    return (state, IsolateSendServerTaskResult(taskId: taskId, events: events));
+  }
+}
+
+class IsolateSendServerUploadCancelAction extends ReduxAction<IsolateController, ParentIsolateState> {
+  final int taskId;
+
+  IsolateSendServerUploadCancelAction({
+    required this.taskId,
+  });
+
+  @override
+  ParentIsolateState reduce() {
+    final connection = state.sendServerUpload;
+    if (connection == null) {
+      throw StateError('sendServerUpload is not initialized');
+    }
+
+    connection.sendToIsolate(
+      SendToIsolateData(
+        syncState: null,
+        data: IsolateTask(
+          data: SendServerUploadCancelTask(taskId: taskId),
+        ),
+      ),
+    );
+
+    return state;
+  }
 }
 
 class IsolateHttpUploadFilesAction extends ReduxActionWithResult<IsolateController, ParentIsolateState, IsolateHttpUploadActionResult> {

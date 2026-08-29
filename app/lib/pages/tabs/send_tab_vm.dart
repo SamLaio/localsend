@@ -17,6 +17,7 @@ import 'package:localsend_app/provider/settings_provider.dart';
 import 'package:localsend_app/widget/dialogs/add_file_dialog.dart';
 import 'package:localsend_app/widget/dialogs/address_input_dialog.dart';
 import 'package:localsend_app/widget/dialogs/favorite_dialog.dart';
+import 'package:localsend_app/widget/dialogs/send_server_upload_dialog.dart';
 import 'package:localsend_isolates/model/device.dart';
 import 'package:localsend_isolates/model/session_status.dart';
 import 'package:refena_flutter/refena_flutter.dart';
@@ -31,6 +32,7 @@ class SendTabVm {
   final Future<void> Function(BuildContext context) onTapAddress;
   final Future<void> Function(BuildContext context) onTapFavorite;
   final Future<void> Function(BuildContext context, SendMode mode) onTapSendMode;
+  final Future<void> Function(BuildContext context) onTapSendServer;
   final Future<void> Function(BuildContext context, Device device) onTapDevice;
   final Future<void> Function(BuildContext context, Device device) onTapDeviceMultiSend;
 
@@ -43,6 +45,7 @@ class SendTabVm {
     required this.onTapAddress,
     required this.onTapFavorite,
     required this.onTapSendMode,
+    required this.onTapSendServer,
     required this.onTapDevice,
     required this.onTapDeviceMultiSend,
   });
@@ -141,6 +144,23 @@ final sendTabVmProvider = ViewProvider((ref) {
       if (mode != SendMode.multiple) {
         ref.notifier(sendProvider).clearAllSessions();
       }
+    },
+    onTapSendServer: (context) async {
+      var files = ref.read(selectedSendingFilesProvider);
+      if (files.isEmpty) {
+        await AddFileDialog.open(
+          context: context,
+          options: pickerOptions,
+        );
+      }
+
+      files = ref.read(selectedSendingFilesProvider);
+
+      if (files.isEmpty || !context.mounted) {
+        return;
+      }
+
+      await SendServerUploadDialog.open(context: context, files: files);
     },
     onTapDevice: (context, device) async {
       var files = selectedFiles;

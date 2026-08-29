@@ -33,7 +33,7 @@ use crate::api::server::*;
 use crate::api::stream::*;
 use crate::api::webrtc::*;
 use flutter_rust_bridge::for_generated::byteorder::{NativeEndian, ReadBytesExt, WriteBytesExt};
-use flutter_rust_bridge::for_generated::{transform_result_dco, Lifetimeable, Lockable};
+use flutter_rust_bridge::for_generated::{Lifetimeable, Lockable, transform_result_dco};
 use flutter_rust_bridge::{Handler, IntoIntoDart};
 
 // Section: boilerplate
@@ -44,7 +44,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.12.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1979579466;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1043226596;
 
 // Section: executor
 
@@ -2964,6 +2964,75 @@ fn wire__crate__api__logging__enable_debug_logging_impl(
         },
     )
 }
+fn wire__crate__api__send_server__encrypted_upload_size_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "encrypted_upload_size",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_size = <u64>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse::<_, ()>((move || {
+                let output_ok =
+                    Result::<_, ()>::Ok(crate::api::send_server::encrypted_upload_size(api_size))?;
+                Ok(output_ok)
+            })())
+        },
+    )
+}
+fn wire__crate__api__send_server__fetch_send_server_config_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "fetch_send_server_config",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_server_url = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, crate::api::send_server::RsSendServerError>(
+                    (move || async move {
+                        let output_ok =
+                            crate::api::send_server::fetch_send_server_config(api_server_url)
+                                .await?;
+                        Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
 fn wire__crate__api__crypto__generate_key_pair_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -3323,6 +3392,79 @@ fn wire__crate__api__server__start_server_impl(
                             api_show_token,
                         )
                         .await?;
+                        Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire__crate__api__send_server__upload_send_server_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "upload_send_server",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_sink = <StreamSink<
+                crate::api::send_server::RsSendServerUploadEvent,
+                flutter_rust_bridge::for_generated::SseCodec,
+            >>::sse_decode(&mut deserializer);
+            let api_files =
+                <Vec<crate::api::send_server::RsSendServerFile>>::sse_decode(&mut deserializer);
+            let api_options =
+                <crate::api::send_server::RsSendServerUploadOptions>::sse_decode(&mut deserializer);
+            let api_cancel_token = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<RsCancellationToken>,
+            >>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, ()>(
+                    (move || async move {
+                        let mut api_cancel_token_guard = None;
+                        let decode_indices_ =
+                            flutter_rust_bridge::for_generated::lockable_compute_decode_order(
+                                vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                                    &api_cancel_token,
+                                    0,
+                                    false,
+                                )],
+                            );
+                        for i in decode_indices_ {
+                            match i {
+                                0 => {
+                                    api_cancel_token_guard =
+                                        Some(api_cancel_token.lockable_decode_async_ref().await)
+                                }
+                                _ => unreachable!(),
+                            }
+                        }
+                        let api_cancel_token_guard = api_cancel_token_guard.unwrap();
+                        let output_ok = Result::<_, ()>::Ok({
+                            crate::api::send_server::upload_send_server(
+                                api_sink,
+                                api_files,
+                                api_options,
+                                &*api_cancel_token_guard,
+                            )
+                            .await;
+                        })?;
                         Ok(output_ok)
                     })()
                     .await,
@@ -3908,6 +4050,19 @@ impl SseDecode
 }
 
 impl SseDecode
+    for StreamSink<
+        crate::api::send_server::RsSendServerUploadEvent,
+        flutter_rust_bridge::for_generated::SseCodec,
+    >
+{
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <String>::sse_decode(deserializer);
+        return StreamSink::deserialize(inner);
+    }
+}
+
+impl SseDecode
     for StreamSink<crate::api::server::RsServerEvent, flutter_rust_bridge::for_generated::SseCodec>
 {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -4176,6 +4331,18 @@ impl SseDecode for Vec<crate::api::model::FileDto> {
     }
 }
 
+impl SseDecode for Vec<u64> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = Vec::with_capacity(len_ as usize);
+        for idx_ in 0..len_ {
+            ans_.push(<u64>::sse_decode(deserializer));
+        }
+        return ans_;
+    }
+}
+
 impl SseDecode for Vec<u8> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -4235,6 +4402,20 @@ impl SseDecode for Vec<crate::api::discovery::RsDeviceLog> {
         let mut ans_ = Vec::with_capacity(len_ as usize);
         for idx_ in 0..len_ {
             ans_.push(<crate::api::discovery::RsDeviceLog>::sse_decode(
+                deserializer,
+            ));
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<crate::api::send_server::RsSendServerFile> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = Vec::with_capacity(len_ as usize);
+        for idx_ in 0..len_ {
+            ans_.push(<crate::api::send_server::RsSendServerFile>::sse_decode(
                 deserializer,
             ));
         }
@@ -4687,6 +4868,122 @@ impl SseDecode for crate::api::http::RsHttpClientError {
     }
 }
 
+impl SseDecode for crate::api::send_server::RsSendServerError {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut tag_ = <i32>::sse_decode(deserializer);
+        match tag_ {
+            0 => {
+                return crate::api::send_server::RsSendServerError::InvalidUrl;
+            }
+            1 => {
+                let mut var_status = <u16>::sse_decode(deserializer);
+                return crate::api::send_server::RsSendServerError::Status { status: var_status };
+            }
+            2 => {
+                let mut var_field0 = <String>::sse_decode(deserializer);
+                return crate::api::send_server::RsSendServerError::InvalidResponse(var_field0);
+            }
+            3 => {
+                let mut var_field0 = <String>::sse_decode(deserializer);
+                return crate::api::send_server::RsSendServerError::Network(var_field0);
+            }
+            4 => {
+                let mut var_field0 = <String>::sse_decode(deserializer);
+                return crate::api::send_server::RsSendServerError::Io(var_field0);
+            }
+            5 => {
+                return crate::api::send_server::RsSendServerError::Cancelled;
+            }
+            6 => {
+                return crate::api::send_server::RsSendServerError::Crypto;
+            }
+            7 => {
+                let mut var_field0 = <String>::sse_decode(deserializer);
+                return crate::api::send_server::RsSendServerError::Other(var_field0);
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
+    }
+}
+
+impl SseDecode for crate::api::send_server::RsSendServerFile {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_name = <String>::sse_decode(deserializer);
+        let mut var_size = <u64>::sse_decode(deserializer);
+        let mut var_mime = <Option<String>>::sse_decode(deserializer);
+        let mut var_filePath = <Option<String>>::sse_decode(deserializer);
+        let mut var_fileBytes = <Option<Vec<u8>>>::sse_decode(deserializer);
+        let mut var_fileDescriptor = <Option<i32>>::sse_decode(deserializer);
+        return crate::api::send_server::RsSendServerFile {
+            name: var_name,
+            size: var_size,
+            mime: var_mime,
+            file_path: var_filePath,
+            file_bytes: var_fileBytes,
+            file_descriptor: var_fileDescriptor,
+        };
+    }
+}
+
+impl SseDecode for crate::api::send_server::RsSendServerUploadEvent {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut tag_ = <i32>::sse_decode(deserializer);
+        match tag_ {
+            0 => {
+                let mut var_sent = <u64>::sse_decode(deserializer);
+                let mut var_total = <u64>::sse_decode(deserializer);
+                let mut var_progress = <f64>::sse_decode(deserializer);
+                return crate::api::send_server::RsSendServerUploadEvent::Progress {
+                    sent: var_sent,
+                    total: var_total,
+                    progress: var_progress,
+                };
+            }
+            1 => {
+                let mut var_id = <String>::sse_decode(deserializer);
+                let mut var_url = <String>::sse_decode(deserializer);
+                let mut var_password = <Option<String>>::sse_decode(deserializer);
+                return crate::api::send_server::RsSendServerUploadEvent::Finished {
+                    id: var_id,
+                    url: var_url,
+                    password: var_password,
+                };
+            }
+            2 => {
+                let mut var_error =
+                    <crate::api::send_server::RsSendServerError>::sse_decode(deserializer);
+                return crate::api::send_server::RsSendServerUploadEvent::Failed {
+                    error: var_error,
+                };
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
+    }
+}
+
+impl SseDecode for crate::api::send_server::RsSendServerUploadOptions {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_serverUrl = <String>::sse_decode(deserializer);
+        let mut var_password = <Option<String>>::sse_decode(deserializer);
+        let mut var_downloadLimit = <u64>::sse_decode(deserializer);
+        let mut var_expireSeconds = <u64>::sse_decode(deserializer);
+        return crate::api::send_server::RsSendServerUploadOptions {
+            server_url: var_serverUrl,
+            password: var_password,
+            download_limit: var_downloadLimit,
+            expire_seconds: var_expireSeconds,
+        };
+    }
+}
+
 impl SseDecode for crate::api::server::RsServerEvent {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -4906,6 +5203,56 @@ impl SseDecode for crate::api::crypto::SecurityContext {
             certificate: var_certificate,
             certificate_hash: var_certificateHash,
         };
+    }
+}
+
+impl SseDecode for crate::api::send_server::SendServerAnonLimits {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_maxFileSize = <u64>::sse_decode(deserializer);
+        let mut var_maxDownloads = <u64>::sse_decode(deserializer);
+        let mut var_maxExpireSeconds = <u64>::sse_decode(deserializer);
+        return crate::api::send_server::SendServerAnonLimits {
+            max_file_size: var_maxFileSize,
+            max_downloads: var_maxDownloads,
+            max_expire_seconds: var_maxExpireSeconds,
+        };
+    }
+}
+
+impl SseDecode for crate::api::send_server::SendServerConfig {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_limits = <crate::api::send_server::SendServerLimits>::sse_decode(deserializer);
+        let mut var_defaults =
+            <crate::api::send_server::SendServerDefaults>::sse_decode(deserializer);
+        return crate::api::send_server::SendServerConfig {
+            limits: var_limits,
+            defaults: var_defaults,
+        };
+    }
+}
+
+impl SseDecode for crate::api::send_server::SendServerDefaults {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_downloadCounts = <Vec<u64>>::sse_decode(deserializer);
+        let mut var_expireTimesSeconds = <Vec<u64>>::sse_decode(deserializer);
+        let mut var_expireSeconds = <u64>::sse_decode(deserializer);
+        return crate::api::send_server::SendServerDefaults {
+            download_counts: var_downloadCounts,
+            expire_times_seconds: var_expireTimesSeconds,
+            expire_seconds: var_expireSeconds,
+        };
+    }
+}
+
+impl SseDecode for crate::api::send_server::SendServerLimits {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_anon =
+            <crate::api::send_server::SendServerAnonLimits>::sse_decode(deserializer);
+        return crate::api::send_server::SendServerLimits { anon: var_anon };
     }
 }
 
@@ -5350,20 +5697,32 @@ fn pde_ffi_dispatcher_primary_impl(
         49 => {
             wire__crate__api__logging__enable_debug_logging_impl(port, ptr, rust_vec_len, data_len)
         }
-        50 => wire__crate__api__crypto__generate_key_pair_impl(port, ptr, rust_vec_len, data_len),
-        51 => wire__crate__api__crypto__generate_security_context_impl(
+        51 => wire__crate__api__send_server__fetch_send_server_config_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        52 => wire__crate__api__crypto__hash_file_impl(port, ptr, rust_vec_len, data_len),
-        54 => {
+        52 => wire__crate__api__crypto__generate_key_pair_impl(port, ptr, rust_vec_len, data_len),
+        53 => wire__crate__api__crypto__generate_security_context_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        54 => wire__crate__api__crypto__hash_file_impl(port, ptr, rust_vec_len, data_len),
+        56 => {
             wire__crate__api__metadata__read_file_metadata_impl(port, ptr, rust_vec_len, data_len)
         }
-        56 => wire__crate__api__discovery__start_discovery_impl(port, ptr, rust_vec_len, data_len),
-        57 => wire__crate__api__server__start_server_impl(port, ptr, rust_vec_len, data_len),
-        58 => wire__crate__api__crypto__verify_cert_impl(port, ptr, rust_vec_len, data_len),
+        58 => wire__crate__api__discovery__start_discovery_impl(port, ptr, rust_vec_len, data_len),
+        59 => wire__crate__api__server__start_server_impl(port, ptr, rust_vec_len, data_len),
+        60 => wire__crate__api__send_server__upload_send_server_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        61 => wire__crate__api__crypto__verify_cert_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -5380,8 +5739,11 @@ fn pde_ffi_dispatcher_sync_impl(
         6 => wire__crate__api__cancel__RsCancellationToken_cancel_impl(ptr, rust_vec_len, data_len),
         46 => wire__crate__api__cancel__create_cancellation_token_impl(ptr, rust_vec_len, data_len),
         47 => wire__crate__api__http__create_client_impl(ptr, rust_vec_len, data_len),
-        53 => wire__crate__api__filename__is_valid_file_name_impl(ptr, rust_vec_len, data_len),
-        55 => wire__crate__api__filename__sanitize_file_name_impl(ptr, rust_vec_len, data_len),
+        50 => {
+            wire__crate__api__send_server__encrypted_upload_size_impl(ptr, rust_vec_len, data_len)
+        }
+        55 => wire__crate__api__filename__is_valid_file_name_impl(ptr, rust_vec_len, data_len),
+        57 => wire__crate__api__filename__sanitize_file_name_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -6140,6 +6502,135 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::http::RsHttpClientError>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::send_server::RsSendServerError {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self {
+            crate::api::send_server::RsSendServerError::InvalidUrl => [0.into_dart()].into_dart(),
+            crate::api::send_server::RsSendServerError::Status { status } => {
+                [1.into_dart(), status.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::send_server::RsSendServerError::InvalidResponse(field0) => {
+                [2.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::send_server::RsSendServerError::Network(field0) => {
+                [3.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::send_server::RsSendServerError::Io(field0) => {
+                [4.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::send_server::RsSendServerError::Cancelled => [5.into_dart()].into_dart(),
+            crate::api::send_server::RsSendServerError::Crypto => [6.into_dart()].into_dart(),
+            crate::api::send_server::RsSendServerError::Other(field0) => {
+                [7.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::send_server::RsSendServerError
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::send_server::RsSendServerError>
+    for crate::api::send_server::RsSendServerError
+{
+    fn into_into_dart(self) -> crate::api::send_server::RsSendServerError {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::send_server::RsSendServerFile {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.name.into_into_dart().into_dart(),
+            self.size.into_into_dart().into_dart(),
+            self.mime.into_into_dart().into_dart(),
+            self.file_path.into_into_dart().into_dart(),
+            self.file_bytes.into_into_dart().into_dart(),
+            self.file_descriptor.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::send_server::RsSendServerFile
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::send_server::RsSendServerFile>
+    for crate::api::send_server::RsSendServerFile
+{
+    fn into_into_dart(self) -> crate::api::send_server::RsSendServerFile {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::send_server::RsSendServerUploadEvent {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self {
+            crate::api::send_server::RsSendServerUploadEvent::Progress {
+                sent,
+                total,
+                progress,
+            } => [
+                0.into_dart(),
+                sent.into_into_dart().into_dart(),
+                total.into_into_dart().into_dart(),
+                progress.into_into_dart().into_dart(),
+            ]
+            .into_dart(),
+            crate::api::send_server::RsSendServerUploadEvent::Finished { id, url, password } => [
+                1.into_dart(),
+                id.into_into_dart().into_dart(),
+                url.into_into_dart().into_dart(),
+                password.into_into_dart().into_dart(),
+            ]
+            .into_dart(),
+            crate::api::send_server::RsSendServerUploadEvent::Failed { error } => {
+                [2.into_dart(), error.into_into_dart().into_dart()].into_dart()
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::send_server::RsSendServerUploadEvent
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::send_server::RsSendServerUploadEvent>
+    for crate::api::send_server::RsSendServerUploadEvent
+{
+    fn into_into_dart(self) -> crate::api::send_server::RsSendServerUploadEvent {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::send_server::RsSendServerUploadOptions {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.server_url.into_into_dart().into_dart(),
+            self.password.into_into_dart().into_dart(),
+            self.download_limit.into_into_dart().into_dart(),
+            self.expire_seconds.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::send_server::RsSendServerUploadOptions
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::send_server::RsSendServerUploadOptions>
+    for crate::api::send_server::RsSendServerUploadOptions
+{
+    fn into_into_dart(self) -> crate::api::send_server::RsSendServerUploadOptions {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::api::server::RsServerEvent {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self {
@@ -6382,6 +6873,88 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::crypto::SecurityContext>
     for crate::api::crypto::SecurityContext
 {
     fn into_into_dart(self) -> crate::api::crypto::SecurityContext {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::send_server::SendServerAnonLimits {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.max_file_size.into_into_dart().into_dart(),
+            self.max_downloads.into_into_dart().into_dart(),
+            self.max_expire_seconds.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::send_server::SendServerAnonLimits
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::send_server::SendServerAnonLimits>
+    for crate::api::send_server::SendServerAnonLimits
+{
+    fn into_into_dart(self) -> crate::api::send_server::SendServerAnonLimits {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::send_server::SendServerConfig {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.limits.into_into_dart().into_dart(),
+            self.defaults.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::send_server::SendServerConfig
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::send_server::SendServerConfig>
+    for crate::api::send_server::SendServerConfig
+{
+    fn into_into_dart(self) -> crate::api::send_server::SendServerConfig {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::send_server::SendServerDefaults {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.download_counts.into_into_dart().into_dart(),
+            self.expire_times_seconds.into_into_dart().into_dart(),
+            self.expire_seconds.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::send_server::SendServerDefaults
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::send_server::SendServerDefaults>
+    for crate::api::send_server::SendServerDefaults
+{
+    fn into_into_dart(self) -> crate::api::send_server::SendServerDefaults {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::send_server::SendServerLimits {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [self.anon.into_into_dart().into_dart()].into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::send_server::SendServerLimits
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::send_server::SendServerLimits>
+    for crate::api::send_server::SendServerLimits
+{
+    fn into_into_dart(self) -> crate::api::send_server::SendServerLimits {
         self
     }
 }
@@ -6881,6 +7454,18 @@ impl SseEncode
 }
 
 impl SseEncode
+    for StreamSink<
+        crate::api::send_server::RsSendServerUploadEvent,
+        flutter_rust_bridge::for_generated::SseCodec,
+    >
+{
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        unimplemented!("")
+    }
+}
+
+impl SseEncode
     for StreamSink<crate::api::server::RsServerEvent, flutter_rust_bridge::for_generated::SseCodec>
 {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -7110,6 +7695,16 @@ impl SseEncode for Vec<crate::api::model::FileDto> {
     }
 }
 
+impl SseEncode for Vec<u64> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <u64>::sse_encode(item, serializer);
+        }
+    }
+}
+
 impl SseEncode for Vec<u8> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -7156,6 +7751,16 @@ impl SseEncode for Vec<crate::api::discovery::RsDeviceLog> {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
             <crate::api::discovery::RsDeviceLog>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<crate::api::send_server::RsSendServerFile> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::api::send_server::RsSendServerFile>::sse_encode(item, serializer);
         }
     }
 }
@@ -7515,6 +8120,99 @@ impl SseEncode for crate::api::http::RsHttpClientError {
     }
 }
 
+impl SseEncode for crate::api::send_server::RsSendServerError {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        match self {
+            crate::api::send_server::RsSendServerError::InvalidUrl => {
+                <i32>::sse_encode(0, serializer);
+            }
+            crate::api::send_server::RsSendServerError::Status { status } => {
+                <i32>::sse_encode(1, serializer);
+                <u16>::sse_encode(status, serializer);
+            }
+            crate::api::send_server::RsSendServerError::InvalidResponse(field0) => {
+                <i32>::sse_encode(2, serializer);
+                <String>::sse_encode(field0, serializer);
+            }
+            crate::api::send_server::RsSendServerError::Network(field0) => {
+                <i32>::sse_encode(3, serializer);
+                <String>::sse_encode(field0, serializer);
+            }
+            crate::api::send_server::RsSendServerError::Io(field0) => {
+                <i32>::sse_encode(4, serializer);
+                <String>::sse_encode(field0, serializer);
+            }
+            crate::api::send_server::RsSendServerError::Cancelled => {
+                <i32>::sse_encode(5, serializer);
+            }
+            crate::api::send_server::RsSendServerError::Crypto => {
+                <i32>::sse_encode(6, serializer);
+            }
+            crate::api::send_server::RsSendServerError::Other(field0) => {
+                <i32>::sse_encode(7, serializer);
+                <String>::sse_encode(field0, serializer);
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
+    }
+}
+
+impl SseEncode for crate::api::send_server::RsSendServerFile {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.name, serializer);
+        <u64>::sse_encode(self.size, serializer);
+        <Option<String>>::sse_encode(self.mime, serializer);
+        <Option<String>>::sse_encode(self.file_path, serializer);
+        <Option<Vec<u8>>>::sse_encode(self.file_bytes, serializer);
+        <Option<i32>>::sse_encode(self.file_descriptor, serializer);
+    }
+}
+
+impl SseEncode for crate::api::send_server::RsSendServerUploadEvent {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        match self {
+            crate::api::send_server::RsSendServerUploadEvent::Progress {
+                sent,
+                total,
+                progress,
+            } => {
+                <i32>::sse_encode(0, serializer);
+                <u64>::sse_encode(sent, serializer);
+                <u64>::sse_encode(total, serializer);
+                <f64>::sse_encode(progress, serializer);
+            }
+            crate::api::send_server::RsSendServerUploadEvent::Finished { id, url, password } => {
+                <i32>::sse_encode(1, serializer);
+                <String>::sse_encode(id, serializer);
+                <String>::sse_encode(url, serializer);
+                <Option<String>>::sse_encode(password, serializer);
+            }
+            crate::api::send_server::RsSendServerUploadEvent::Failed { error } => {
+                <i32>::sse_encode(2, serializer);
+                <crate::api::send_server::RsSendServerError>::sse_encode(error, serializer);
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
+    }
+}
+
+impl SseEncode for crate::api::send_server::RsSendServerUploadOptions {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.server_url, serializer);
+        <Option<String>>::sse_encode(self.password, serializer);
+        <u64>::sse_encode(self.download_limit, serializer);
+        <u64>::sse_encode(self.expire_seconds, serializer);
+    }
+}
+
 impl SseEncode for crate::api::server::RsServerEvent {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -7691,6 +8389,39 @@ impl SseEncode for crate::api::crypto::SecurityContext {
         <String>::sse_encode(self.public_key, serializer);
         <String>::sse_encode(self.certificate, serializer);
         <String>::sse_encode(self.certificate_hash, serializer);
+    }
+}
+
+impl SseEncode for crate::api::send_server::SendServerAnonLimits {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <u64>::sse_encode(self.max_file_size, serializer);
+        <u64>::sse_encode(self.max_downloads, serializer);
+        <u64>::sse_encode(self.max_expire_seconds, serializer);
+    }
+}
+
+impl SseEncode for crate::api::send_server::SendServerConfig {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <crate::api::send_server::SendServerLimits>::sse_encode(self.limits, serializer);
+        <crate::api::send_server::SendServerDefaults>::sse_encode(self.defaults, serializer);
+    }
+}
+
+impl SseEncode for crate::api::send_server::SendServerDefaults {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <Vec<u64>>::sse_encode(self.download_counts, serializer);
+        <Vec<u64>>::sse_encode(self.expire_times_seconds, serializer);
+        <u64>::sse_encode(self.expire_seconds, serializer);
+    }
+}
+
+impl SseEncode for crate::api::send_server::SendServerLimits {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <crate::api::send_server::SendServerAnonLimits>::sse_encode(self.anon, serializer);
     }
 }
 
@@ -7886,7 +8617,7 @@ mod io {
     use flutter_rust_bridge::for_generated::byteorder::{
         NativeEndian, ReadBytesExt, WriteBytesExt,
     };
-    use flutter_rust_bridge::for_generated::{transform_result_dco, Lifetimeable, Lockable};
+    use flutter_rust_bridge::for_generated::{Lifetimeable, Lockable, transform_result_dco};
     use flutter_rust_bridge::{Handler, IntoIntoDart};
 
     // Section: boilerplate
@@ -8070,7 +8801,7 @@ mod web {
     };
     use flutter_rust_bridge::for_generated::wasm_bindgen;
     use flutter_rust_bridge::for_generated::wasm_bindgen::prelude::*;
-    use flutter_rust_bridge::for_generated::{transform_result_dco, Lifetimeable, Lockable};
+    use flutter_rust_bridge::for_generated::{Lifetimeable, Lockable, transform_result_dco};
     use flutter_rust_bridge::{Handler, IntoIntoDart};
 
     // Section: boilerplate

@@ -1,18 +1,18 @@
-# Code signing policy
+# 程式碼簽章政策
 
-Free code signing provided by [SignPath.io](https://signpath.io/), certificate by [SignPath Foundation](https://signpath.org/).
+Code signing 由 [SignPath.io](https://signpath.io/) 免費提供，certificate 由 [SignPath Foundation](https://signpath.org/) 提供。
 
-Official Windows release artifacts (portable ZIP, EXE installer, MSIX helper) are built automatically from the source code in the [LocalSend repository](https://github.com/localsend/localsend) using GitHub Actions ([release workflow](.github/workflows/release.yml)) and signed through SignPath. Every signing request is manually approved by an approver listed below.
+官方 Windows release artifacts，也就是 portable ZIP、EXE installer 與 MSIX helper，會使用 GitHub Actions ([release workflow](.github/workflows/release.yml)) 從 [LocalSend repository](https://github.com/localsend/localsend) 的 source code 自動建置，並透過 SignPath 簽章。每一次 signing request 都會由下列 approver 手動核准。
 
-Only binaries built by LocalSend are signed. Third-party binaries that are packaged with the app are distributed as provided by their upstream projects and do not receive the LocalSend signing operation.
+只有 LocalSend 建置出的 binaries 會被簽章。與 app 一起打包的第三方 binaries 會依照其 upstream projects 提供的形式散布，不會另外套用 LocalSend signing。
 
-Signed Windows files show **SignPath Foundation** as the publisher because the certificate belongs to the foundation, not to the LocalSend project.
+已簽章的 Windows files 會顯示 **SignPath Foundation** 為 publisher，因為 certificate 屬於該 foundation，而不是 LocalSend project。
 
-## Team roles
+## 團隊角色
 
-- Committers and reviewers: [@Tienisto](https://github.com/Tienisto)
+- Committers 與 reviewers: [@Tienisto](https://github.com/Tienisto)
 - Approvers: [@Tienisto](https://github.com/Tienisto)
 
-## Privacy
+## 隱私
 
-LocalSend's privacy policy is available at [localsend.org/privacy](https://localsend.org/privacy).
+LocalSend 的 privacy policy 可在 [localsend.org/privacy](https://localsend.org/privacy) 查看。
