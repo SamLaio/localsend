@@ -372,6 +372,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String? dco_decode_opt_String(dynamic raw);
 
   @protected
+  SendServerUploadAuthConfig? dco_decode_opt_send_server_upload_auth_config(dynamic raw);
+
+  @protected
   Dart2RustStreamReceiver?
   dco_decode_opt_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDart2RustStreamReceiver(dynamic raw);
 
@@ -873,6 +876,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   String? sse_decode_opt_String(SseDeserializer deserializer);
+
+  @protected
+  SendServerUploadAuthConfig? sse_decode_opt_send_server_upload_auth_config(SseDeserializer deserializer);
 
   @protected
   Dart2RustStreamReceiver?
@@ -1423,6 +1429,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_opt_String(String? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_send_server_upload_auth_config(SendServerUploadAuthConfig? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDart2RustStreamReceiver(

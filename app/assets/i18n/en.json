@@ -128,6 +128,9 @@
     "send": {
       "title": "Send",
       "sendServerUrl": "Send Server URL",
+      "sendServerUploadAuthPassword": "Send Server upload password",
+      "sendServerUploadAuthPasswordSet": "Set",
+      "sendServerUploadAuthPasswordNotSet": "Not set",
       "shareViaLinkAutoAccept": "Automatically accept requests in \"Share via link\" mode",
       "createChecksums": "Create checksums when sending files"
     },
@@ -526,7 +529,10 @@
       "anonymousLimit": "Anonymous upload limit: {size}",
       "sizeTooLarge": "The selected files exceed the anonymous upload size allowed by the server.",
       "urlChanged": "Server URL changed. Reload configuration first.",
-      "password": "Password (optional)",
+      "missingUrl": "Set the Send Server URL in settings first.",
+      "missingUploadAuthPassword": "Set the Send Server upload password in settings first.",
+      "password": "Download password (optional)",
+      "passwordResult": "Password: {password}",
       "downloadLimit": "Downloads",
       "expireTime": "Expiration",
       "upload": "Upload",

@@ -83,12 +83,15 @@ class _SendServerUploadDialogState extends State<SendServerUploadDialog> with Re
     final uploading = state.status == SendServerUploadStatus.uploading;
     final finished = state.status == SendServerUploadStatus.finished;
     final loadingConfig = state.status == SendServerUploadStatus.loadingConfig;
-    final canUpload = !uploading && !loadingConfig && !finished && !sizeTooLarge && config != null && _serverUrl.isNotEmpty;
+    final uploadAuthRequired = config?.uploadAuth?.required ?? false;
+    final uploadAuthPassword = ref.watch(settingsProvider).sendServerUploadAuthPassword;
+    final uploadAuthMissing = uploadAuthRequired && (uploadAuthPassword == null || uploadAuthPassword.isEmpty);
+    final canUpload = !uploading && !loadingConfig && !finished && !sizeTooLarge && config != null && _serverUrl.isNotEmpty && !uploadAuthMissing;
 
     return PopScope(
       canPop: !uploading,
       child: AlertDialog(
-        title: const Text('上傳至 Send Server'),
+        title: Text(t.dialogs.sendServerUpload.title),
         content: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 520),
           child: SingleChildScrollView(
@@ -97,14 +100,14 @@ class _SendServerUploadDialogState extends State<SendServerUploadDialog> with Re
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  '已選取 ${widget.files.length} 個檔案，總大小 ${selectedBytes.asReadableFileSize}',
+                  t.dialogs.sendServerUpload.selectedFiles(files: widget.files.length, size: selectedBytes.asReadableFileSize),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 if (maxSize != null)
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(
-                      '伺服器匿名上傳上限：${maxSize.asReadableFileSize}',
+                      t.dialogs.sendServerUpload.anonymousLimit(size: maxSize.asReadableFileSize),
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ),
@@ -112,7 +115,7 @@ class _SendServerUploadDialogState extends State<SendServerUploadDialog> with Re
                   Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
-                      '已選檔案超過伺服器允許的匿名上傳大小。',
+                      t.dialogs.sendServerUpload.sizeTooLarge,
                       style: TextStyle(color: Theme.of(context).colorScheme.error),
                     ),
                   ),
@@ -120,7 +123,15 @@ class _SendServerUploadDialogState extends State<SendServerUploadDialog> with Re
                   Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
-                      '請先到設定頁填寫 Send Server URL。',
+                      t.dialogs.sendServerUpload.missingUrl,
+                      style: TextStyle(color: Theme.of(context).colorScheme.warning),
+                    ),
+                  ),
+                if (uploadAuthMissing)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      t.dialogs.sendServerUpload.missingUploadAuthPassword,
                       style: TextStyle(color: Theme.of(context).colorScheme.warning),
                     ),
                   ),
@@ -129,22 +140,22 @@ class _SendServerUploadDialogState extends State<SendServerUploadDialog> with Re
                   controller: _passwordController,
                   enabled: !uploading && !finished,
                   obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: '密碼（選填）',
-                    prefixIcon: Icon(Icons.lock_outline),
+                  decoration: InputDecoration(
+                    labelText: t.dialogs.sendServerUpload.password,
+                    prefixIcon: const Icon(Icons.lock_outline),
                   ),
                 ),
                 const SizedBox(height: 12),
                 DropdownButtonFormField<int>(
                   initialValue: _downloadLimit,
-                  decoration: const InputDecoration(labelText: '下載次數'),
+                  decoration: InputDecoration(labelText: t.dialogs.sendServerUpload.downloadLimit),
                   items: downloadCounts.map((value) => DropdownMenuItem(value: value, child: Text('$value'))).toList(),
                   onChanged: uploading || finished ? null : (value) => setState(() => _downloadLimit = value ?? _downloadLimit),
                 ),
                 const SizedBox(height: 12),
                 DropdownButtonFormField<int>(
                   initialValue: _expireSeconds,
-                  decoration: const InputDecoration(labelText: '存活時間'),
+                  decoration: InputDecoration(labelText: t.dialogs.sendServerUpload.expireTime),
                   items: expireSecondsOptions.map((value) => DropdownMenuItem(value: value, child: Text(_formatExpire(value)))).toList(),
                   onChanged: uploading || finished ? null : (value) => setState(() => _expireSeconds = value ?? _expireSeconds),
                 ),
@@ -168,7 +179,7 @@ class _SendServerUploadDialogState extends State<SendServerUploadDialog> with Re
                   SelectableText(state.url!),
                   if (state.password != null && state.password!.isNotEmpty) ...[
                     const SizedBox(height: 8),
-                    SelectableText('密碼：${state.password!}'),
+                    SelectableText(t.dialogs.sendServerUpload.passwordResult(password: state.password!)),
                   ],
                 ],
               ],
@@ -202,7 +213,7 @@ class _SendServerUploadDialogState extends State<SendServerUploadDialog> with Re
                   ? () async => await android_channel.shareTextAndroid(text: _shareText(state))
                   : null,
               icon: const Icon(Icons.share),
-              label: const Text('分享'),
+              label: Text(t.dialogs.sendServerUpload.share),
             ),
           ] else
             ElevatedButton.icon(
@@ -213,6 +224,7 @@ class _SendServerUploadDialogState extends State<SendServerUploadDialog> with Re
                           .upload(
                             serverUrl: _serverUrl,
                             password: _passwordController.text.trim().isEmpty ? null : _passwordController.text,
+                            uploadAuthPassword: uploadAuthPassword,
                             downloadLimit: _downloadLimit,
                             expireSeconds: _expireSeconds,
                             files: widget.files,
@@ -220,7 +232,7 @@ class _SendServerUploadDialogState extends State<SendServerUploadDialog> with Re
                     }
                   : null,
               icon: const Icon(Icons.cloud_upload_outlined),
-              label: const Text('上傳'),
+              label: Text(t.dialogs.sendServerUpload.upload),
             ),
         ],
       ),
@@ -239,7 +251,7 @@ class _SendServerUploadDialogState extends State<SendServerUploadDialog> with Re
     if (password == null || password.isEmpty) {
       return state.url ?? '';
     }
-    return '${state.url}\n密碼：$password';
+    return '${state.url}\n${t.dialogs.sendServerUpload.passwordResult(password: password)}';
   }
 }
 

@@ -10,7 +10,7 @@
 4. App 先讀取已設定的 Send Server URL，預設為 `https://exp.com/`。
 5. App 呼叫 `GET /config` 取得伺服器限制。
 6. 使用者在上傳前設定：
-   - 密碼：可留空，也可自動產生。
+   - 下載密碼：可留空，也可自動產生。
    - 存活次數：從 `DEFAULTS.DOWNLOAD_COUNTS` 選擇，並不得超過 `LIMITS.ANON.MAX_DOWNLOADS`。
    - 存活時間：從 `DEFAULTS.EXPIRE_TIMES_SECONDS` 選擇，並不得超過 `LIMITS.ANON.MAX_EXPIRE_SECONDS`。
 7. App 檢查選取內容總大小不得超過 `LIMITS.ANON.MAX_FILE_SIZE`。
@@ -20,13 +20,16 @@
 
 ## 設定
 
-新增一個持久設定：
+新增持久設定：
 
 ```text
 sendServerUrl = https://exp.com/
+sendServerUploadAuthPassword = null
 ```
 
-建議放在 Settings > Send 區塊。第一版只需要單一 URL，不做多 server profile。
+建議放在 Settings > Send 區塊。第一版只需要單一 URL 與對應的一組上傳密碼，不做多 server profile。
+
+上傳密碼是「誰可以上傳到這台 Send Server」的權限密碼，應與 Send Server URL 一起設定；它不是分享給收件者的下載密碼。若 `/config` 回傳 `UPLOAD_AUTH.REQUIRED = true`，上傳時會從設定讀取上傳密碼並產生 challenge proof。若未設定，dialog 只提示使用者回設定頁填寫。
 
 涉及檔案：
 
@@ -78,10 +81,9 @@ app/lib/widget/dialogs/send_server_upload_options_dialog.dart
 
 頁面責任：
 
-- 顯示目前 Send Server URL。
 - 呼叫 `/config` 載入限制。
 - 顯示選取檔案總數與總大小。
-- 提供密碼、下載次數、過期時間欄位。
+- 提供下載密碼、下載次數、過期時間欄位。
 - 檢查大小與限制。
 - 觸發上傳。
 
@@ -111,7 +113,8 @@ packages/localsend_isolates/lib/src/task/send_server_upload/
 - 單一 Send Server URL。
 - 匿名上傳。
 - 檔案與多檔上傳。
-- 密碼可選。
+- 下載密碼可選。
+- 若 server 要求上傳密碼，從設定讀取並送出 `uploadAuth` proof。
 - 存活次數可選。
 - 存活時間可選。
 - 進度回報。
@@ -153,6 +156,41 @@ wss://exp.com/api/ws
 }
 ```
 
+若 `/config` 顯示 `UPLOAD_AUTH.REQUIRED = true`，上傳前需先呼叫：
+
+```text
+GET /api/upload/challenge
+```
+
+並用設定中的上傳密碼產生 proof，然後在第一個 WebSocket message 加入：
+
+```json
+{
+  "uploadAuth": {
+    "uuid": "<challenge uuid>",
+    "proof": "<hmac sha256 hex>"
+  }
+}
+```
+
+proof 計算方式：
+
+1. 使用上傳密碼、challenge 回傳的 `salt`、`iterations` 執行 PBKDF2-HMAC-SHA256，輸出 32 bytes key。
+2. 對以下訊息做 HMAC-SHA256，輸出 hex：
+
+```text
+send-v1-upload
+uuid=<uuid>
+challenge=<challenge>
+expires_at=<expires_at>
+fileMetadata=<fileMetadata>
+authorization=<authorization>
+timeLimit=<timeLimit>
+dlimit=<dlimit>
+```
+
+`fileMetadata`、`authorization`、`timeLimit`、`dlimit` 必須與 WebSocket 第一包完全相同。若 server 回 `error: "upload_auth"`，UI 顯示上傳密碼錯誤，並保留使用者已選檔案。
+
 7. 後續傳加密後的檔案 chunks。
 8. 結尾傳單一 byte `0x00` 作 EOF。
 9. Server 先回：
@@ -171,9 +209,9 @@ wss://exp.com/api/ws
 https://exp.com/download/<id>/#<secretKeyBase64Url>
 ```
 
-## 密碼流程
+## 下載密碼流程
 
-Send 的密碼不是 URL query，也不是明文存在 server。若使用者設定密碼：
+Send 的下載密碼不是 URL query，也不是明文存在 server。若使用者設定下載密碼：
 
 1. 以上一步的完整分享連結當 salt。
 2. 使用 PBKDF2 SHA-256 從密碼派生新的 HMAC key。

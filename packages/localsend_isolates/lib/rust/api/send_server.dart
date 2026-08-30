@@ -45,6 +45,11 @@ sealed class RsSendServerError with _$RsSendServerError implements FrbException 
   ) = RsSendServerError_Io;
   const factory RsSendServerError.cancelled() = RsSendServerError_Cancelled;
   const factory RsSendServerError.crypto() = RsSendServerError_Crypto;
+  const factory RsSendServerError.uploadAuthRequired() = RsSendServerError_UploadAuthRequired;
+  const factory RsSendServerError.uploadAuthFailed() = RsSendServerError_UploadAuthFailed;
+  const factory RsSendServerError.unsupportedUploadAuth(
+    String field0,
+  ) = RsSendServerError_UnsupportedUploadAuth;
   const factory RsSendServerError.other(
     String field0,
   ) = RsSendServerError_Other;
@@ -105,18 +110,20 @@ sealed class RsSendServerUploadEvent with _$RsSendServerUploadEvent {
 class RsSendServerUploadOptions {
   final String serverUrl;
   final String? password;
+  final String? uploadAuthPassword;
   final BigInt downloadLimit;
   final BigInt expireSeconds;
 
   const RsSendServerUploadOptions({
     required this.serverUrl,
     this.password,
+    this.uploadAuthPassword,
     required this.downloadLimit,
     required this.expireSeconds,
   });
 
   @override
-  int get hashCode => serverUrl.hashCode ^ password.hashCode ^ downloadLimit.hashCode ^ expireSeconds.hashCode;
+  int get hashCode => serverUrl.hashCode ^ password.hashCode ^ uploadAuthPassword.hashCode ^ downloadLimit.hashCode ^ expireSeconds.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -125,6 +132,7 @@ class RsSendServerUploadOptions {
           runtimeType == other.runtimeType &&
           serverUrl == other.serverUrl &&
           password == other.password &&
+          uploadAuthPassword == other.uploadAuthPassword &&
           downloadLimit == other.downloadLimit &&
           expireSeconds == other.expireSeconds;
 }
@@ -156,18 +164,25 @@ class SendServerAnonLimits {
 class SendServerConfig {
   final SendServerLimits limits;
   final SendServerDefaults defaults;
+  final SendServerUploadAuthConfig? uploadAuth;
 
   const SendServerConfig({
     required this.limits,
     required this.defaults,
+    this.uploadAuth,
   });
 
   @override
-  int get hashCode => limits.hashCode ^ defaults.hashCode;
+  int get hashCode => limits.hashCode ^ defaults.hashCode ^ uploadAuth.hashCode;
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is SendServerConfig && runtimeType == other.runtimeType && limits == other.limits && defaults == other.defaults;
+      identical(this, other) ||
+      other is SendServerConfig &&
+          runtimeType == other.runtimeType &&
+          limits == other.limits &&
+          defaults == other.defaults &&
+          uploadAuth == other.uploadAuth;
 }
 
 class SendServerDefaults {
@@ -206,4 +221,31 @@ class SendServerLimits {
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is SendServerLimits && runtimeType == other.runtimeType && anon == other.anon;
+}
+
+class SendServerUploadAuthConfig {
+  final bool required;
+  final String kdf;
+  final int pbkdf2Iterations;
+  final BigInt challengeTtlSeconds;
+
+  const SendServerUploadAuthConfig({
+    required this.required,
+    required this.kdf,
+    required this.pbkdf2Iterations,
+    required this.challengeTtlSeconds,
+  });
+
+  @override
+  int get hashCode => required.hashCode ^ kdf.hashCode ^ pbkdf2Iterations.hashCode ^ challengeTtlSeconds.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SendServerUploadAuthConfig &&
+          runtimeType == other.runtimeType &&
+          required == other.required &&
+          kdf == other.kdf &&
+          pbkdf2Iterations == other.pbkdf2Iterations &&
+          challengeTtlSeconds == other.challengeTtlSeconds;
 }

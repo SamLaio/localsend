@@ -128,6 +128,9 @@
     "send": {
       "title": "傳送",
       "sendServerUrl": "Send Server URL",
+      "sendServerUploadAuthPassword": "Send Server 上傳密碼",
+      "sendServerUploadAuthPasswordSet": "已設定",
+      "sendServerUploadAuthPasswordNotSet": "未設定",
       "shareViaLinkAutoAccept": "透過連結分享：自動同意接收要求",
       "createChecksums": "傳送檔案時建立校驗碼"
     },
@@ -456,7 +459,10 @@
       "anonymousLimit": "伺服器匿名上傳上限：{size}",
       "sizeTooLarge": "已選檔案超過伺服器允許的匿名上傳大小。",
       "urlChanged": "Server URL 已變更，請先重新讀取設定。",
-      "password": "密碼（選填）",
+      "missingUrl": "請先到設定頁填寫 Send Server URL。",
+      "missingUploadAuthPassword": "請先到設定頁填寫 Send Server 上傳密碼。",
+      "password": "下載密碼（選填）",
+      "passwordResult": "密碼：{password}",
       "downloadLimit": "下載次數",
       "expireTime": "存活時間",
       "upload": "上傳",

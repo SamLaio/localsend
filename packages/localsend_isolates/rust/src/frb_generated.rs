@@ -4538,6 +4538,19 @@ impl SseDecode for Option<crate::api::server::TlsConfig> {
     }
 }
 
+impl SseDecode for Option<crate::api::send_server::SendServerUploadAuthConfig> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(
+                <crate::api::send_server::SendServerUploadAuthConfig>::sse_decode(deserializer),
+            );
+        } else {
+            return None;
+        }
+    }
+}
+
 impl SseDecode for Option<u32> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -4899,6 +4912,18 @@ impl SseDecode for crate::api::send_server::RsSendServerError {
                 return crate::api::send_server::RsSendServerError::Crypto;
             }
             7 => {
+                return crate::api::send_server::RsSendServerError::UploadAuthRequired;
+            }
+            8 => {
+                return crate::api::send_server::RsSendServerError::UploadAuthFailed;
+            }
+            9 => {
+                let mut var_field0 = <String>::sse_decode(deserializer);
+                return crate::api::send_server::RsSendServerError::UnsupportedUploadAuth(
+                    var_field0,
+                );
+            }
+            10 => {
                 let mut var_field0 = <String>::sse_decode(deserializer);
                 return crate::api::send_server::RsSendServerError::Other(var_field0);
             }
@@ -4973,11 +4998,13 @@ impl SseDecode for crate::api::send_server::RsSendServerUploadOptions {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_serverUrl = <String>::sse_decode(deserializer);
         let mut var_password = <Option<String>>::sse_decode(deserializer);
+        let mut var_uploadAuthPassword = <Option<String>>::sse_decode(deserializer);
         let mut var_downloadLimit = <u64>::sse_decode(deserializer);
         let mut var_expireSeconds = <u64>::sse_decode(deserializer);
         return crate::api::send_server::RsSendServerUploadOptions {
             server_url: var_serverUrl,
             password: var_password,
+            upload_auth_password: var_uploadAuthPassword,
             download_limit: var_downloadLimit,
             expire_seconds: var_expireSeconds,
         };
@@ -5226,9 +5253,12 @@ impl SseDecode for crate::api::send_server::SendServerConfig {
         let mut var_limits = <crate::api::send_server::SendServerLimits>::sse_decode(deserializer);
         let mut var_defaults =
             <crate::api::send_server::SendServerDefaults>::sse_decode(deserializer);
+        let mut var_uploadAuth =
+            <Option<crate::api::send_server::SendServerUploadAuthConfig>>::sse_decode(deserializer);
         return crate::api::send_server::SendServerConfig {
             limits: var_limits,
             defaults: var_defaults,
+            upload_auth: var_uploadAuth,
         };
     }
 }
@@ -5253,6 +5283,22 @@ impl SseDecode for crate::api::send_server::SendServerLimits {
         let mut var_anon =
             <crate::api::send_server::SendServerAnonLimits>::sse_decode(deserializer);
         return crate::api::send_server::SendServerLimits { anon: var_anon };
+    }
+}
+
+impl SseDecode for crate::api::send_server::SendServerUploadAuthConfig {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_required = <bool>::sse_decode(deserializer);
+        let mut var_kdf = <String>::sse_decode(deserializer);
+        let mut var_pbkdf2Iterations = <u32>::sse_decode(deserializer);
+        let mut var_challengeTtlSeconds = <u64>::sse_decode(deserializer);
+        return crate::api::send_server::SendServerUploadAuthConfig {
+            required: var_required,
+            kdf: var_kdf,
+            pbkdf2_iterations: var_pbkdf2Iterations,
+            challenge_ttl_seconds: var_challengeTtlSeconds,
+        };
     }
 }
 
@@ -6520,8 +6566,17 @@ impl flutter_rust_bridge::IntoDart for crate::api::send_server::RsSendServerErro
             }
             crate::api::send_server::RsSendServerError::Cancelled => [5.into_dart()].into_dart(),
             crate::api::send_server::RsSendServerError::Crypto => [6.into_dart()].into_dart(),
+            crate::api::send_server::RsSendServerError::UploadAuthRequired => {
+                [7.into_dart()].into_dart()
+            }
+            crate::api::send_server::RsSendServerError::UploadAuthFailed => {
+                [8.into_dart()].into_dart()
+            }
+            crate::api::send_server::RsSendServerError::UnsupportedUploadAuth(field0) => {
+                [9.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
             crate::api::send_server::RsSendServerError::Other(field0) => {
-                [7.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+                [10.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
             _ => {
                 unimplemented!("");
@@ -6613,6 +6668,7 @@ impl flutter_rust_bridge::IntoDart for crate::api::send_server::RsSendServerUplo
         [
             self.server_url.into_into_dart().into_dart(),
             self.password.into_into_dart().into_dart(),
+            self.upload_auth_password.into_into_dart().into_dart(),
             self.download_limit.into_into_dart().into_dart(),
             self.expire_seconds.into_into_dart().into_dart(),
         ]
@@ -6904,6 +6960,7 @@ impl flutter_rust_bridge::IntoDart for crate::api::send_server::SendServerConfig
         [
             self.limits.into_into_dart().into_dart(),
             self.defaults.into_into_dart().into_dart(),
+            self.upload_auth.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -6955,6 +7012,29 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::send_server::SendServerLimits
     for crate::api::send_server::SendServerLimits
 {
     fn into_into_dart(self) -> crate::api::send_server::SendServerLimits {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::send_server::SendServerUploadAuthConfig {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.required.into_into_dart().into_dart(),
+            self.kdf.into_into_dart().into_dart(),
+            self.pbkdf2_iterations.into_into_dart().into_dart(),
+            self.challenge_ttl_seconds.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::send_server::SendServerUploadAuthConfig
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::send_server::SendServerUploadAuthConfig>
+    for crate::api::send_server::SendServerUploadAuthConfig
+{
+    fn into_into_dart(self) -> crate::api::send_server::SendServerUploadAuthConfig {
         self
     }
 }
@@ -7871,6 +7951,16 @@ impl SseEncode for Option<crate::api::server::TlsConfig> {
     }
 }
 
+impl SseEncode for Option<crate::api::send_server::SendServerUploadAuthConfig> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <crate::api::send_server::SendServerUploadAuthConfig>::sse_encode(value, serializer);
+        }
+    }
+}
+
 impl SseEncode for Option<u32> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -8149,8 +8239,18 @@ impl SseEncode for crate::api::send_server::RsSendServerError {
             crate::api::send_server::RsSendServerError::Crypto => {
                 <i32>::sse_encode(6, serializer);
             }
-            crate::api::send_server::RsSendServerError::Other(field0) => {
+            crate::api::send_server::RsSendServerError::UploadAuthRequired => {
                 <i32>::sse_encode(7, serializer);
+            }
+            crate::api::send_server::RsSendServerError::UploadAuthFailed => {
+                <i32>::sse_encode(8, serializer);
+            }
+            crate::api::send_server::RsSendServerError::UnsupportedUploadAuth(field0) => {
+                <i32>::sse_encode(9, serializer);
+                <String>::sse_encode(field0, serializer);
+            }
+            crate::api::send_server::RsSendServerError::Other(field0) => {
+                <i32>::sse_encode(10, serializer);
                 <String>::sse_encode(field0, serializer);
             }
             _ => {
@@ -8208,6 +8308,7 @@ impl SseEncode for crate::api::send_server::RsSendServerUploadOptions {
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <String>::sse_encode(self.server_url, serializer);
         <Option<String>>::sse_encode(self.password, serializer);
+        <Option<String>>::sse_encode(self.upload_auth_password, serializer);
         <u64>::sse_encode(self.download_limit, serializer);
         <u64>::sse_encode(self.expire_seconds, serializer);
     }
@@ -8406,6 +8507,10 @@ impl SseEncode for crate::api::send_server::SendServerConfig {
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <crate::api::send_server::SendServerLimits>::sse_encode(self.limits, serializer);
         <crate::api::send_server::SendServerDefaults>::sse_encode(self.defaults, serializer);
+        <Option<crate::api::send_server::SendServerUploadAuthConfig>>::sse_encode(
+            self.upload_auth,
+            serializer,
+        );
     }
 }
 
@@ -8422,6 +8527,16 @@ impl SseEncode for crate::api::send_server::SendServerLimits {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <crate::api::send_server::SendServerAnonLimits>::sse_encode(self.anon, serializer);
+    }
+}
+
+impl SseEncode for crate::api::send_server::SendServerUploadAuthConfig {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.required, serializer);
+        <String>::sse_encode(self.kdf, serializer);
+        <u32>::sse_encode(self.pbkdf2_iterations, serializer);
+        <u64>::sse_encode(self.challenge_ttl_seconds, serializer);
     }
 }
 

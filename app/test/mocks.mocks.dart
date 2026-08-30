@@ -570,6 +570,39 @@ class MockPersistenceService extends _i1.Mock implements _i4.PersistenceService 
           as _i5.Future<void>);
 
   @override
+  String getSendServerUrl() =>
+      (super.noSuchMethod(
+            Invocation.method(#getSendServerUrl, []),
+            returnValue: _i8.dummyValue<String>(
+              this,
+              Invocation.method(#getSendServerUrl, []),
+            ),
+            returnValueForMissingStub: _i8.dummyValue<String>(
+              this,
+              Invocation.method(#getSendServerUrl, []),
+            ),
+          )
+          as String);
+
+  @override
+  _i5.Future<void> setSendServerUrl(String? url) =>
+      (super.noSuchMethod(
+            Invocation.method(#setSendServerUrl, [url]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
+  _i5.Future<void> setSendServerUploadAuthPassword(String? password) =>
+      (super.noSuchMethod(
+            Invocation.method(#setSendServerUploadAuthPassword, [password]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
   _i5.Future<void> setWindowOffsetX(double? x) =>
       (super.noSuchMethod(
             Invocation.method(#setWindowOffsetX, [x]),
