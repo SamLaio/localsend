@@ -268,7 +268,6 @@ class IsolateSendServerFetchConfigAction extends ReduxActionWithResult<IsolateCo
 class IsolateSendServerUploadFilesAction extends ReduxActionWithResult<IsolateController, ParentIsolateState, IsolateSendServerTaskResult> {
   final String serverUrl;
   final String? password;
-  final String? uploadAuthPassword;
   final int downloadLimit;
   final int expireSeconds;
   final List<SendServerUploadFile> files;
@@ -276,7 +275,6 @@ class IsolateSendServerUploadFilesAction extends ReduxActionWithResult<IsolateCo
   IsolateSendServerUploadFilesAction({
     required this.serverUrl,
     required this.password,
-    required this.uploadAuthPassword,
     required this.downloadLimit,
     required this.expireSeconds,
     required this.files,
@@ -294,7 +292,6 @@ class IsolateSendServerUploadFilesAction extends ReduxActionWithResult<IsolateCo
       task: SendServerUploadFilesTask(
         serverUrl: serverUrl,
         password: password,
-        uploadAuthPassword: uploadAuthPassword,
         downloadLimit: downloadLimit,
         expireSeconds: expireSeconds,
         files: files,

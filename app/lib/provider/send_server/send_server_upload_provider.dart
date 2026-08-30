@@ -145,7 +145,6 @@ class SendServerUploadService extends Notifier<SendServerUploadState> {
   Future<void> upload({
     required String serverUrl,
     required String? password,
-    required String? uploadAuthPassword,
     required int downloadLimit,
     required int expireSeconds,
     required List<CrossFile> files,
@@ -168,7 +167,6 @@ class SendServerUploadService extends Notifier<SendServerUploadState> {
             IsolateSendServerUploadFilesAction(
               serverUrl: serverUrl,
               password: password,
-              uploadAuthPassword: uploadAuthPassword,
               downloadLimit: downloadLimit,
               expireSeconds: expireSeconds,
               files: files

@@ -638,8 +638,6 @@ class Translations$dialogs$zh_TW extends Translations$dialogs$en {
   @override
   late final Translations$dialogs$sendModeHelp$zh_TW sendModeHelp = Translations$dialogs$sendModeHelp$zh_TW.internal(_root);
   @override
-  late final Translations$dialogs$sendServerUpload$zh_TW sendServerUpload = Translations$dialogs$sendServerUpload$zh_TW.internal(_root);
-  @override
   late final Translations$dialogs$zoom$zh_TW zoom = Translations$dialogs$zoom$zh_TW.internal(_root);
 }
 
@@ -922,12 +920,6 @@ class Translations$settingsTab$send$zh_TW extends Translations$settingsTab$send$
   String get title => '傳送';
   @override
   String get sendServerUrl => 'Send Server URL';
-  @override
-  String get sendServerUploadAuthPassword => 'Send Server 上傳密碼';
-  @override
-  String get sendServerUploadAuthPasswordSet => '已設定';
-  @override
-  String get sendServerUploadAuthPasswordNotSet => '未設定';
   @override
   String get shareViaLinkAutoAccept => '透過連結分享：自動同意接收要求';
   @override
@@ -1478,53 +1470,6 @@ class Translations$dialogs$sendModeHelp$zh_TW extends Translations$dialogs$sendM
   String get multiple => '傳送檔案給多位接收者；檔案傳輸完成後，系統不會清除選取項目。';
   @override
   String get link => '未安裝 LocalSend 的接收者可以在瀏覽器中開啟連結，以下載選取的檔案。';
-}
-
-// Path: dialogs.sendServerUpload
-class Translations$dialogs$sendServerUpload$zh_TW extends Translations$dialogs$sendServerUpload$en {
-  Translations$dialogs$sendServerUpload$zh_TW.internal(TranslationsZhTw root) : this._root = root, super.internal(root);
-
-  final TranslationsZhTw _root; // ignore: unused_field
-
-  // Translations
-  @override
-  String get title => '上傳至 Send Server';
-  @override
-  String get reloadConfig => '重新讀取設定';
-  @override
-  String selectedFiles({required Object files, required Object size}) => '已選取 ${files} 個檔案，總大小 ${size}';
-  @override
-  String anonymousLimit({required Object size}) => '伺服器匿名上傳上限：${size}';
-  @override
-  String get sizeTooLarge => '已選檔案超過伺服器允許的匿名上傳大小。';
-  @override
-  String get urlChanged => 'Server URL 已變更，請先重新讀取設定。';
-  @override
-  String get missingUrl => '請先到設定頁填寫 Send Server URL。';
-  @override
-  String get missingUploadAuthPassword => '請先到設定頁填寫 Send Server 上傳密碼。';
-  @override
-  String get password => '下載密碼（選填）';
-  @override
-  String passwordResult({required Object password}) => '密碼：${password}';
-  @override
-  String get downloadLimit => '下載次數';
-  @override
-  String get expireTime => '存活時間';
-  @override
-  String get upload => '上傳';
-  @override
-  String get share => '分享';
-  @override
-  String minutes({required Object n}) => '${n} 分鐘';
-  @override
-  String hours({required Object n}) => '${n} 小時';
-  @override
-  String days({required Object n}) => '${n} 天';
-  @override
-  String months({required Object n}) => '${n} 個月';
-  @override
-  String years({required Object n}) => '${n} 年';
 }
 
 // Path: dialogs.zoom

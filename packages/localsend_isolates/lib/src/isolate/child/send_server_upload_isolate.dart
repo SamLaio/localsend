@@ -40,7 +40,6 @@ class SendServerFetchConfigTask implements BaseSendServerUploadTask {
 class SendServerUploadFilesTask implements BaseSendServerUploadTask {
   final String serverUrl;
   final String? password;
-  final String? uploadAuthPassword;
   final int downloadLimit;
   final int expireSeconds;
   final List<SendServerUploadFile> files;
@@ -48,7 +47,6 @@ class SendServerUploadFilesTask implements BaseSendServerUploadTask {
   SendServerUploadFilesTask({
     required this.serverUrl,
     required this.password,
-    required this.uploadAuthPassword,
     required this.downloadLimit,
     required this.expireSeconds,
     required this.files,
@@ -138,19 +136,9 @@ Future<void> _fetchConfig(
 ) async {
   try {
     final config = await fetchSendServerConfig(serverUrl: task.serverUrl);
-    sendToMain(
-      IsolateTaskStreamResult.event(
-        id: taskId,
-        data: SendServerConfigLoadedEvent(config: config),
-      ),
-    );
+    sendToMain(IsolateTaskStreamResult.event(id: taskId, data: SendServerConfigLoadedEvent(config: config)));
   } catch (e) {
-    sendToMain(
-      IsolateTaskStreamResult.event(
-        id: taskId,
-        data: SendServerUploadFailedEvent(error: e.humanSendServerErrorMessage),
-      ),
-    );
+    sendToMain(IsolateTaskStreamResult.event(id: taskId, data: SendServerUploadFailedEvent(error: e.humanSendServerErrorMessage)));
   } finally {
     sendToMain(IsolateTaskStreamResult.done(id: taskId));
   }
@@ -186,7 +174,6 @@ Future<void> _upload(
       options: RsSendServerUploadOptions(
         serverUrl: task.serverUrl,
         password: task.password,
-        uploadAuthPassword: task.uploadAuthPassword,
         downloadLimit: BigInt.from(task.downloadLimit),
         expireSeconds: BigInt.from(task.expireSeconds),
       ),
@@ -201,29 +188,14 @@ Future<void> _upload(
             ),
           );
         case RsSendServerUploadEvent_Finished(:final id, :final url, :final password):
-          sendToMain(
-            IsolateTaskStreamResult.event(
-              id: taskId,
-              data: SendServerUploadFinishedEvent(id: id, url: url, password: password),
-            ),
-          );
+          sendToMain(IsolateTaskStreamResult.event(id: taskId, data: SendServerUploadFinishedEvent(id: id, url: url, password: password)));
         case RsSendServerUploadEvent_Failed(:final error):
-          sendToMain(
-            IsolateTaskStreamResult.event(
-              id: taskId,
-              data: SendServerUploadFailedEvent(error: error.humanSendServerErrorMessage),
-            ),
-          );
+          sendToMain(IsolateTaskStreamResult.event(id: taskId, data: SendServerUploadFailedEvent(error: error.humanSendServerErrorMessage)));
       }
     }
   } catch (e, st) {
     _logger.warning('Send Server upload failed', e, st);
-    sendToMain(
-      IsolateTaskStreamResult.event(
-        id: taskId,
-        data: SendServerUploadFailedEvent(error: e.humanSendServerErrorMessage),
-      ),
-    );
+    sendToMain(IsolateTaskStreamResult.event(id: taskId, data: SendServerUploadFailedEvent(error: e.humanSendServerErrorMessage)));
   } finally {
     ref.read(_cancelTokenProvider).remove(taskId);
     sendToMain(IsolateTaskStreamResult.done(id: taskId));
@@ -241,9 +213,6 @@ extension SendServerErrorMessageExt on Object {
       RsSendServerError_Io(:final field0) => field0,
       RsSendServerError_Cancelled() => 'Upload cancelled',
       RsSendServerError_Crypto() => 'Crypto error',
-      RsSendServerError_UploadAuthRequired() => '請輸入上傳密碼',
-      RsSendServerError_UploadAuthFailed() => '上傳密碼錯誤，請重新輸入',
-      RsSendServerError_UnsupportedUploadAuth(:final field0) => '不支援的上傳密碼演算法：$field0',
       RsSendServerError_Other(:final field0) => field0,
       _ => e.humanErrorMessage,
     };

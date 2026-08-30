@@ -787,7 +787,6 @@ class Translations$dialogs$en {
       Translations$dialogs$quickSaveFromFavoritesNotice$en.internal(_root);
   late final Translations$dialogs$pin$en pin = Translations$dialogs$pin$en.internal(_root);
   late final Translations$dialogs$sendModeHelp$en sendModeHelp = Translations$dialogs$sendModeHelp$en.internal(_root);
-  late final Translations$dialogs$sendServerUpload$en sendServerUpload = Translations$dialogs$sendServerUpload$en.internal(_root);
   late final Translations$dialogs$zoom$en zoom = Translations$dialogs$zoom$en.internal(_root);
 }
 
@@ -1154,15 +1153,6 @@ class Translations$settingsTab$send$en {
 
   /// en: 'Send Server URL'
   String get sendServerUrl => 'Send Server URL';
-
-  /// en: 'Send Server upload password'
-  String get sendServerUploadAuthPassword => 'Send Server upload password';
-
-  /// en: 'Set'
-  String get sendServerUploadAuthPasswordSet => 'Set';
-
-  /// en: 'Not set'
-  String get sendServerUploadAuthPasswordNotSet => 'Not set';
 
   /// en: 'Automatically accept requests in "Share via link" mode'
   String get shareViaLinkAutoAccept => 'Automatically accept requests in "Share via link" mode';
@@ -1823,72 +1813,6 @@ class Translations$dialogs$sendModeHelp$en {
 
   /// en: 'Recipients who do not have LocalSend installed can download the selected files by opening the link in their browser.'
   String get link => 'Recipients who do not have LocalSend installed can download the selected files by opening the link in their browser.';
-}
-
-// Path: dialogs.sendServerUpload
-class Translations$dialogs$sendServerUpload$en {
-  Translations$dialogs$sendServerUpload$en.internal(this._root);
-
-  final Translations _root; // ignore: unused_field
-
-  // Translations
-
-  /// en: 'Upload to Send Server'
-  String get title => 'Upload to Send Server';
-
-  /// en: 'Reload configuration'
-  String get reloadConfig => 'Reload configuration';
-
-  /// en: '{files} files selected, total size {size}'
-  String selectedFiles({required Object files, required Object size}) => '${files} files selected, total size ${size}';
-
-  /// en: 'Anonymous upload limit: {size}'
-  String anonymousLimit({required Object size}) => 'Anonymous upload limit: ${size}';
-
-  /// en: 'The selected files exceed the anonymous upload size allowed by the server.'
-  String get sizeTooLarge => 'The selected files exceed the anonymous upload size allowed by the server.';
-
-  /// en: 'Server URL changed. Reload configuration first.'
-  String get urlChanged => 'Server URL changed. Reload configuration first.';
-
-  /// en: 'Set the Send Server URL in settings first.'
-  String get missingUrl => 'Set the Send Server URL in settings first.';
-
-  /// en: 'Set the Send Server upload password in settings first.'
-  String get missingUploadAuthPassword => 'Set the Send Server upload password in settings first.';
-
-  /// en: 'Download password (optional)'
-  String get password => 'Download password (optional)';
-
-  /// en: 'Password: {password}'
-  String passwordResult({required Object password}) => 'Password: ${password}';
-
-  /// en: 'Downloads'
-  String get downloadLimit => 'Downloads';
-
-  /// en: 'Expiration'
-  String get expireTime => 'Expiration';
-
-  /// en: 'Upload'
-  String get upload => 'Upload';
-
-  /// en: 'Share'
-  String get share => 'Share';
-
-  /// en: '{n} minutes'
-  String minutes({required Object n}) => '${n} minutes';
-
-  /// en: '{n} hours'
-  String hours({required Object n}) => '${n} hours';
-
-  /// en: '{n} days'
-  String days({required Object n}) => '${n} days';
-
-  /// en: '{n} months'
-  String months({required Object n}) => '${n} months';
-
-  /// en: '{n} years'
-  String years({required Object n}) => '${n} years';
 }
 
 // Path: dialogs.zoom

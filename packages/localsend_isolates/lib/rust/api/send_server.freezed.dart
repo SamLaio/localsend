@@ -55,7 +55,7 @@ extension RsSendServerErrorPatterns on RsSendServerError {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( RsSendServerError_InvalidUrl value)?  invalidUrl,TResult Function( RsSendServerError_Status value)?  status,TResult Function( RsSendServerError_InvalidResponse value)?  invalidResponse,TResult Function( RsSendServerError_Network value)?  network,TResult Function( RsSendServerError_Io value)?  io,TResult Function( RsSendServerError_Cancelled value)?  cancelled,TResult Function( RsSendServerError_Crypto value)?  crypto,TResult Function( RsSendServerError_UploadAuthRequired value)?  uploadAuthRequired,TResult Function( RsSendServerError_UploadAuthFailed value)?  uploadAuthFailed,TResult Function( RsSendServerError_UnsupportedUploadAuth value)?  unsupportedUploadAuth,TResult Function( RsSendServerError_Other value)?  other,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( RsSendServerError_InvalidUrl value)?  invalidUrl,TResult Function( RsSendServerError_Status value)?  status,TResult Function( RsSendServerError_InvalidResponse value)?  invalidResponse,TResult Function( RsSendServerError_Network value)?  network,TResult Function( RsSendServerError_Io value)?  io,TResult Function( RsSendServerError_Cancelled value)?  cancelled,TResult Function( RsSendServerError_Crypto value)?  crypto,TResult Function( RsSendServerError_Other value)?  other,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case RsSendServerError_InvalidUrl() when invalidUrl != null:
@@ -65,10 +65,7 @@ return invalidResponse(_that);case RsSendServerError_Network() when network != n
 return network(_that);case RsSendServerError_Io() when io != null:
 return io(_that);case RsSendServerError_Cancelled() when cancelled != null:
 return cancelled(_that);case RsSendServerError_Crypto() when crypto != null:
-return crypto(_that);case RsSendServerError_UploadAuthRequired() when uploadAuthRequired != null:
-return uploadAuthRequired(_that);case RsSendServerError_UploadAuthFailed() when uploadAuthFailed != null:
-return uploadAuthFailed(_that);case RsSendServerError_UnsupportedUploadAuth() when unsupportedUploadAuth != null:
-return unsupportedUploadAuth(_that);case RsSendServerError_Other() when other != null:
+return crypto(_that);case RsSendServerError_Other() when other != null:
 return other(_that);case _:
   return orElse();
 
@@ -87,7 +84,7 @@ return other(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( RsSendServerError_InvalidUrl value)  invalidUrl,required TResult Function( RsSendServerError_Status value)  status,required TResult Function( RsSendServerError_InvalidResponse value)  invalidResponse,required TResult Function( RsSendServerError_Network value)  network,required TResult Function( RsSendServerError_Io value)  io,required TResult Function( RsSendServerError_Cancelled value)  cancelled,required TResult Function( RsSendServerError_Crypto value)  crypto,required TResult Function( RsSendServerError_UploadAuthRequired value)  uploadAuthRequired,required TResult Function( RsSendServerError_UploadAuthFailed value)  uploadAuthFailed,required TResult Function( RsSendServerError_UnsupportedUploadAuth value)  unsupportedUploadAuth,required TResult Function( RsSendServerError_Other value)  other,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( RsSendServerError_InvalidUrl value)  invalidUrl,required TResult Function( RsSendServerError_Status value)  status,required TResult Function( RsSendServerError_InvalidResponse value)  invalidResponse,required TResult Function( RsSendServerError_Network value)  network,required TResult Function( RsSendServerError_Io value)  io,required TResult Function( RsSendServerError_Cancelled value)  cancelled,required TResult Function( RsSendServerError_Crypto value)  crypto,required TResult Function( RsSendServerError_Other value)  other,}){
 final _that = this;
 switch (_that) {
 case RsSendServerError_InvalidUrl():
@@ -97,10 +94,7 @@ return invalidResponse(_that);case RsSendServerError_Network():
 return network(_that);case RsSendServerError_Io():
 return io(_that);case RsSendServerError_Cancelled():
 return cancelled(_that);case RsSendServerError_Crypto():
-return crypto(_that);case RsSendServerError_UploadAuthRequired():
-return uploadAuthRequired(_that);case RsSendServerError_UploadAuthFailed():
-return uploadAuthFailed(_that);case RsSendServerError_UnsupportedUploadAuth():
-return unsupportedUploadAuth(_that);case RsSendServerError_Other():
+return crypto(_that);case RsSendServerError_Other():
 return other(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
@@ -115,7 +109,7 @@ return other(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( RsSendServerError_InvalidUrl value)?  invalidUrl,TResult? Function( RsSendServerError_Status value)?  status,TResult? Function( RsSendServerError_InvalidResponse value)?  invalidResponse,TResult? Function( RsSendServerError_Network value)?  network,TResult? Function( RsSendServerError_Io value)?  io,TResult? Function( RsSendServerError_Cancelled value)?  cancelled,TResult? Function( RsSendServerError_Crypto value)?  crypto,TResult? Function( RsSendServerError_UploadAuthRequired value)?  uploadAuthRequired,TResult? Function( RsSendServerError_UploadAuthFailed value)?  uploadAuthFailed,TResult? Function( RsSendServerError_UnsupportedUploadAuth value)?  unsupportedUploadAuth,TResult? Function( RsSendServerError_Other value)?  other,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( RsSendServerError_InvalidUrl value)?  invalidUrl,TResult? Function( RsSendServerError_Status value)?  status,TResult? Function( RsSendServerError_InvalidResponse value)?  invalidResponse,TResult? Function( RsSendServerError_Network value)?  network,TResult? Function( RsSendServerError_Io value)?  io,TResult? Function( RsSendServerError_Cancelled value)?  cancelled,TResult? Function( RsSendServerError_Crypto value)?  crypto,TResult? Function( RsSendServerError_Other value)?  other,}){
 final _that = this;
 switch (_that) {
 case RsSendServerError_InvalidUrl() when invalidUrl != null:
@@ -125,10 +119,7 @@ return invalidResponse(_that);case RsSendServerError_Network() when network != n
 return network(_that);case RsSendServerError_Io() when io != null:
 return io(_that);case RsSendServerError_Cancelled() when cancelled != null:
 return cancelled(_that);case RsSendServerError_Crypto() when crypto != null:
-return crypto(_that);case RsSendServerError_UploadAuthRequired() when uploadAuthRequired != null:
-return uploadAuthRequired(_that);case RsSendServerError_UploadAuthFailed() when uploadAuthFailed != null:
-return uploadAuthFailed(_that);case RsSendServerError_UnsupportedUploadAuth() when unsupportedUploadAuth != null:
-return unsupportedUploadAuth(_that);case RsSendServerError_Other() when other != null:
+return crypto(_that);case RsSendServerError_Other() when other != null:
 return other(_that);case _:
   return null;
 
@@ -146,7 +137,7 @@ return other(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  invalidUrl,TResult Function( int status)?  status,TResult Function( String field0)?  invalidResponse,TResult Function( String field0)?  network,TResult Function( String field0)?  io,TResult Function()?  cancelled,TResult Function()?  crypto,TResult Function()?  uploadAuthRequired,TResult Function()?  uploadAuthFailed,TResult Function( String field0)?  unsupportedUploadAuth,TResult Function( String field0)?  other,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  invalidUrl,TResult Function( int status)?  status,TResult Function( String field0)?  invalidResponse,TResult Function( String field0)?  network,TResult Function( String field0)?  io,TResult Function()?  cancelled,TResult Function()?  crypto,TResult Function( String field0)?  other,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case RsSendServerError_InvalidUrl() when invalidUrl != null:
 return invalidUrl();case RsSendServerError_Status() when status != null:
@@ -155,10 +146,7 @@ return invalidResponse(_that.field0);case RsSendServerError_Network() when netwo
 return network(_that.field0);case RsSendServerError_Io() when io != null:
 return io(_that.field0);case RsSendServerError_Cancelled() when cancelled != null:
 return cancelled();case RsSendServerError_Crypto() when crypto != null:
-return crypto();case RsSendServerError_UploadAuthRequired() when uploadAuthRequired != null:
-return uploadAuthRequired();case RsSendServerError_UploadAuthFailed() when uploadAuthFailed != null:
-return uploadAuthFailed();case RsSendServerError_UnsupportedUploadAuth() when unsupportedUploadAuth != null:
-return unsupportedUploadAuth(_that.field0);case RsSendServerError_Other() when other != null:
+return crypto();case RsSendServerError_Other() when other != null:
 return other(_that.field0);case _:
   return orElse();
 
@@ -177,7 +165,7 @@ return other(_that.field0);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  invalidUrl,required TResult Function( int status)  status,required TResult Function( String field0)  invalidResponse,required TResult Function( String field0)  network,required TResult Function( String field0)  io,required TResult Function()  cancelled,required TResult Function()  crypto,required TResult Function()  uploadAuthRequired,required TResult Function()  uploadAuthFailed,required TResult Function( String field0)  unsupportedUploadAuth,required TResult Function( String field0)  other,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  invalidUrl,required TResult Function( int status)  status,required TResult Function( String field0)  invalidResponse,required TResult Function( String field0)  network,required TResult Function( String field0)  io,required TResult Function()  cancelled,required TResult Function()  crypto,required TResult Function( String field0)  other,}) {final _that = this;
 switch (_that) {
 case RsSendServerError_InvalidUrl():
 return invalidUrl();case RsSendServerError_Status():
@@ -186,10 +174,7 @@ return invalidResponse(_that.field0);case RsSendServerError_Network():
 return network(_that.field0);case RsSendServerError_Io():
 return io(_that.field0);case RsSendServerError_Cancelled():
 return cancelled();case RsSendServerError_Crypto():
-return crypto();case RsSendServerError_UploadAuthRequired():
-return uploadAuthRequired();case RsSendServerError_UploadAuthFailed():
-return uploadAuthFailed();case RsSendServerError_UnsupportedUploadAuth():
-return unsupportedUploadAuth(_that.field0);case RsSendServerError_Other():
+return crypto();case RsSendServerError_Other():
 return other(_that.field0);}
 }
 /// A variant of `when` that fallback to returning `null`
@@ -204,7 +189,7 @@ return other(_that.field0);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  invalidUrl,TResult? Function( int status)?  status,TResult? Function( String field0)?  invalidResponse,TResult? Function( String field0)?  network,TResult? Function( String field0)?  io,TResult? Function()?  cancelled,TResult? Function()?  crypto,TResult? Function()?  uploadAuthRequired,TResult? Function()?  uploadAuthFailed,TResult? Function( String field0)?  unsupportedUploadAuth,TResult? Function( String field0)?  other,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  invalidUrl,TResult? Function( int status)?  status,TResult? Function( String field0)?  invalidResponse,TResult? Function( String field0)?  network,TResult? Function( String field0)?  io,TResult? Function()?  cancelled,TResult? Function()?  crypto,TResult? Function( String field0)?  other,}) {final _that = this;
 switch (_that) {
 case RsSendServerError_InvalidUrl() when invalidUrl != null:
 return invalidUrl();case RsSendServerError_Status() when status != null:
@@ -213,10 +198,7 @@ return invalidResponse(_that.field0);case RsSendServerError_Network() when netwo
 return network(_that.field0);case RsSendServerError_Io() when io != null:
 return io(_that.field0);case RsSendServerError_Cancelled() when cancelled != null:
 return cancelled();case RsSendServerError_Crypto() when crypto != null:
-return crypto();case RsSendServerError_UploadAuthRequired() when uploadAuthRequired != null:
-return uploadAuthRequired();case RsSendServerError_UploadAuthFailed() when uploadAuthFailed != null:
-return uploadAuthFailed();case RsSendServerError_UnsupportedUploadAuth() when unsupportedUploadAuth != null:
-return unsupportedUploadAuth(_that.field0);case RsSendServerError_Other() when other != null:
+return crypto();case RsSendServerError_Other() when other != null:
 return other(_that.field0);case _:
   return null;
 
@@ -584,136 +566,6 @@ String toString() {
 
 
 
-
-/// @nodoc
-
-
-class RsSendServerError_UploadAuthRequired extends RsSendServerError {
-  const RsSendServerError_UploadAuthRequired(): super._();
-
-
-
-
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RsSendServerError_UploadAuthRequired);
-}
-
-
-@override
-int get hashCode => runtimeType.hashCode;
-
-@override
-String toString() {
-  return 'RsSendServerError.uploadAuthRequired()';
-}
-
-
-}
-
-
-
-
-/// @nodoc
-
-
-class RsSendServerError_UploadAuthFailed extends RsSendServerError {
-  const RsSendServerError_UploadAuthFailed(): super._();
-
-
-
-
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RsSendServerError_UploadAuthFailed);
-}
-
-
-@override
-int get hashCode => runtimeType.hashCode;
-
-@override
-String toString() {
-  return 'RsSendServerError.uploadAuthFailed()';
-}
-
-
-}
-
-
-
-
-/// @nodoc
-
-
-class RsSendServerError_UnsupportedUploadAuth extends RsSendServerError {
-  const RsSendServerError_UnsupportedUploadAuth(this.field0): super._();
-
-
- final  String field0;
-
-/// Create a copy of RsSendServerError
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$RsSendServerError_UnsupportedUploadAuthCopyWith<RsSendServerError_UnsupportedUploadAuth> get copyWith => _$RsSendServerError_UnsupportedUploadAuthCopyWithImpl<RsSendServerError_UnsupportedUploadAuth>(this, _$identity);
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RsSendServerError_UnsupportedUploadAuth&&(identical(other.field0, field0) || other.field0 == field0));
-}
-
-
-@override
-int get hashCode => Object.hash(runtimeType,field0);
-
-@override
-String toString() {
-  return 'RsSendServerError.unsupportedUploadAuth(field0: $field0)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class $RsSendServerError_UnsupportedUploadAuthCopyWith<$Res> implements $RsSendServerErrorCopyWith<$Res> {
-  factory $RsSendServerError_UnsupportedUploadAuthCopyWith(RsSendServerError_UnsupportedUploadAuth value, $Res Function(RsSendServerError_UnsupportedUploadAuth) _then) = _$RsSendServerError_UnsupportedUploadAuthCopyWithImpl;
-@useResult
-$Res call({
- String field0
-});
-
-
-
-
-}
-/// @nodoc
-class _$RsSendServerError_UnsupportedUploadAuthCopyWithImpl<$Res>
-    implements $RsSendServerError_UnsupportedUploadAuthCopyWith<$Res> {
-  _$RsSendServerError_UnsupportedUploadAuthCopyWithImpl(this._self, this._then);
-
-  final RsSendServerError_UnsupportedUploadAuth _self;
-  final $Res Function(RsSendServerError_UnsupportedUploadAuth) _then;
-
-/// Create a copy of RsSendServerError
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? field0 = null,}) {
-  return _then(RsSendServerError_UnsupportedUploadAuth(
-null == field0 ? _self.field0 : field0 // ignore: cast_nullable_to_non_nullable
-as String,
-  ));
-}
-
-
-}
 
 /// @nodoc
 

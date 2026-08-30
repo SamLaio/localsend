@@ -294,23 +294,6 @@ class SettingsTab extends StatelessWidget {
                     await ref.notifier(settingsProvider).setSendServerUrl(normalizedUrl);
                   },
                 ),
-                _ButtonEntry(
-                  label: t.settingsTab.send.sendServerUploadAuthPassword,
-                  buttonLabel: vm.settings.sendServerUploadAuthPassword?.isNotEmpty == true
-                      ? t.settingsTab.send.sendServerUploadAuthPasswordSet
-                      : t.settingsTab.send.sendServerUploadAuthPasswordNotSet,
-                  onTap: () async {
-                    final password = await showDialog<String?>(
-                      context: context,
-                      builder: (_) => _SendServerUploadAuthPasswordDialog(initialPassword: vm.settings.sendServerUploadAuthPassword),
-                    );
-                    if (password == null || !context.mounted) {
-                      return;
-                    }
-
-                    await ref.notifier(settingsProvider).setSendServerUploadAuthPassword(password.trim().isEmpty ? null : password);
-                  },
-                ),
                 if (vm.advanced) ...[
                   _BooleanEntry(
                     label: t.settingsTab.send.shareViaLinkAutoAccept,
@@ -688,57 +671,6 @@ class _SendServerUrlDialogState extends State<_SendServerUrlDialog> {
             foregroundColor: Theme.of(context).colorScheme.onPrimary,
           ),
           onPressed: () => context.pop(_controller.text.trim()),
-          child: Text(t.general.confirm),
-        ),
-      ],
-    );
-  }
-}
-
-class _SendServerUploadAuthPasswordDialog extends StatefulWidget {
-  final String? initialPassword;
-
-  const _SendServerUploadAuthPasswordDialog({required this.initialPassword});
-
-  @override
-  State<_SendServerUploadAuthPasswordDialog> createState() => _SendServerUploadAuthPasswordDialogState();
-}
-
-class _SendServerUploadAuthPasswordDialogState extends State<_SendServerUploadAuthPasswordDialog> {
-  late final TextEditingController _controller = TextEditingController(text: widget.initialPassword ?? '');
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(t.settingsTab.send.sendServerUploadAuthPassword),
-      content: SizedBox(
-        width: 520,
-        child: TextFormField(
-          controller: _controller,
-          obscureText: true,
-          textInputAction: TextInputAction.done,
-          autofocus: true,
-          decoration: InputDecoration(labelText: t.settingsTab.send.sendServerUploadAuthPassword),
-          onFieldSubmitted: (_) => context.pop<String?>(_controller.text),
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => context.pop<String?>(null),
-          child: Text(t.general.cancel),
-        ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            foregroundColor: Theme.of(context).colorScheme.onPrimary,
-          ),
-          onPressed: () => context.pop<String?>(_controller.text),
           child: Text(t.general.confirm),
         ),
       ],

@@ -30,7 +30,6 @@ class SettingsState with SettingsStateMappable {
   final bool https;
   final SendMode sendMode;
   final String sendServerUrl;
-  final String? sendServerUploadAuthPassword;
   final bool saveWindowPlacement;
   final bool enableAnimations;
   final DeviceType? deviceType;
@@ -64,7 +63,6 @@ class SettingsState with SettingsStateMappable {
     required this.https,
     required this.sendMode,
     required this.sendServerUrl,
-    required this.sendServerUploadAuthPassword,
     required this.saveWindowPlacement,
     required this.enableAnimations,
     required this.deviceType,

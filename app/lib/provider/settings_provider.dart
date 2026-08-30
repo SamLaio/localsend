@@ -66,7 +66,6 @@ class SettingsService extends PureNotifier<SettingsState> {
     https: _persistence.isHttps(),
     sendMode: _persistence.getSendMode(),
     sendServerUrl: _persistence.getSendServerUrl(),
-    sendServerUploadAuthPassword: _persistence.getSendServerUploadAuthPassword(),
     saveWindowPlacement: _persistence.getSaveWindowPlacement(),
     enableAnimations: _persistence.getEnableAnimations(),
     deviceType: _persistence.getDeviceType(),
@@ -246,14 +245,6 @@ class SettingsService extends PureNotifier<SettingsState> {
     await _persistence.setSendServerUrl(url);
     state = state.copyWith(
       sendServerUrl: url,
-    );
-  }
-
-  Future<void> setSendServerUploadAuthPassword(String? password) async {
-    final normalized = password?.isEmpty ?? true ? null : password;
-    await _persistence.setSendServerUploadAuthPassword(normalized);
-    state = state.copyWith(
-      sendServerUploadAuthPassword: normalized,
     );
   }
 
