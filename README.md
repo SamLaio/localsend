@@ -23,6 +23,7 @@
 LocalSend 是一個免費、open-source app，可讓你在 local network 中安全地與附近裝置分享檔案與訊息，不需要 internet connection。
 
 - [關於](#關於)
+- [Send Server 上傳](#send-server-上傳)
 - [贊助者](#贊助者)
 - [畫面截圖](#畫面截圖)
 - [下載](#下載)
@@ -44,6 +45,14 @@ LocalSend 是一個免費、open-source app，可讓你在 local network 中安�
 ## 關於
 
 LocalSend 是一個 cross-platform app，使用 REST API 與 HTTPS encryption 在裝置間建立安全通訊。不同於依賴外部 server 的 messaging apps，LocalSend 不需要 internet connection 或第三方 servers，因此是快速、可靠的 local communication 解決方案。
+
+## Send Server 上傳
+
+SamLaio/localsend fork 額外支援「上傳至 Send Server」傳送目標。這個功能讓使用者選好檔案後，可以把檔案上傳到 Firefox Send / Mozilla Send 相容的自架 Send Server，而不只是在 local network 內傳給附近裝置。
+
+這是額外傳送目標，不會取代或破壞 LocalSend 原本的區網 P2P、web share、WebRTC、CLI 與 server 流程。Send Server URL 與 server 層級的上傳密碼放在設定頁管理；每次分享用的下載密碼、下載次數與存活時間則在上傳前設定。
+
+搭配的服務端是 [SamLaio/send](https://github.com/SamLaio/send)。該 server 4.0 版提供 `/config`、`/api/upload/challenge` 與 `/api/ws`，支援 Firefox Send 相容的 client-side encryption，以及可選的上傳密碼授權。LocalSend 端的實作計畫與限制見 [support/docs/send-server-upload-plan.md](support/docs/send-server-upload-plan.md)。
 
 ## 贊助者
 

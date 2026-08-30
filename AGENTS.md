@@ -145,6 +145,12 @@ F-Droid 會透過 `support/scripts/remove_proprietary_dependencies.sh` 移除 `i
 
 `app/pubspec.yaml` 的 version 必須與 `support/scripts/compile_windows_exe-inno.iss` 中的 `#define MyAppVersion`、以及 `cli/Cargo.toml` 中的 `version` 一致。CLI 啟動 banner 會印出這個版本。版本不一致時 CI 會失敗。各平台 build commands 與 release steps 記錄在 `README.md` 的「建置」與 `CONTRIBUTING.md` 的「Release」。
 
+## Git 操作授權
+
+- 除非使用者在當前回合明確要求 `commit`、`push` 或 `release`，否則不要執行任何 git 動作；包含但不限於 `git add`、`git commit`、`git push`、`git revert`、建立 tag、修改 GitHub release 或上傳 release assets。
+- 使用者先前回合曾要求過 `commit` / `push` / `release`，不代表後續回合仍授權。每次都必須以當前最新使用者訊息為準。
+- 在未取得明確授權時，可以修改檔案、建置、測試與產出本機 artifact，但不可變更 git history、index、遠端 branch、tag 或 release。
+
 ## SamLaio Fork 規則
 
 本 fork 會加入「上傳至 Send Server」功能。先看 `support/docs/send-server-upload-plan.md`，再改相關程式。
