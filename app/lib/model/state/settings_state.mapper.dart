@@ -122,6 +122,10 @@ class SettingsStateMapper extends ClassMapperBase<SettingsState> {
     'sendServerUrl',
     _$sendServerUrl,
   );
+  static String? _$sendServerUploadAuthPassword(SettingsState v) =>
+      v.sendServerUploadAuthPassword;
+  static const Field<SettingsState, String> _f$sendServerUploadAuthPassword =
+      Field('sendServerUploadAuthPassword', _$sendServerUploadAuthPassword);
   static bool _$saveWindowPlacement(SettingsState v) => v.saveWindowPlacement;
   static const Field<SettingsState, bool> _f$saveWindowPlacement = Field(
     'saveWindowPlacement',
@@ -198,6 +202,7 @@ class SettingsStateMapper extends ClassMapperBase<SettingsState> {
     #https: _f$https,
     #sendMode: _f$sendMode,
     #sendServerUrl: _f$sendServerUrl,
+    #sendServerUploadAuthPassword: _f$sendServerUploadAuthPassword,
     #saveWindowPlacement: _f$saveWindowPlacement,
     #enableAnimations: _f$enableAnimations,
     #deviceType: _f$deviceType,
@@ -233,6 +238,7 @@ class SettingsStateMapper extends ClassMapperBase<SettingsState> {
       https: data.dec(_f$https),
       sendMode: data.dec(_f$sendMode),
       sendServerUrl: data.dec(_f$sendServerUrl),
+      sendServerUploadAuthPassword: data.dec(_f$sendServerUploadAuthPassword),
       saveWindowPlacement: data.dec(_f$saveWindowPlacement),
       enableAnimations: data.dec(_f$enableAnimations),
       deviceType: data.dec(_f$deviceType),
@@ -334,6 +340,7 @@ abstract class SettingsStateCopyWith<$R, $In extends SettingsState, $Out>
     bool? https,
     SendMode? sendMode,
     String? sendServerUrl,
+    String? sendServerUploadAuthPassword,
     bool? saveWindowPlacement,
     bool? enableAnimations,
     DeviceType? deviceType,
@@ -397,6 +404,7 @@ class _SettingsStateCopyWithImpl<$R, $Out>
     bool? https,
     SendMode? sendMode,
     String? sendServerUrl,
+    Object? sendServerUploadAuthPassword = $none,
     bool? saveWindowPlacement,
     bool? enableAnimations,
     Object? deviceType = $none,
@@ -431,6 +439,8 @@ class _SettingsStateCopyWithImpl<$R, $Out>
       if (https != null) #https: https,
       if (sendMode != null) #sendMode: sendMode,
       if (sendServerUrl != null) #sendServerUrl: sendServerUrl,
+      if (sendServerUploadAuthPassword != $none)
+        #sendServerUploadAuthPassword: sendServerUploadAuthPassword,
       if (saveWindowPlacement != null)
         #saveWindowPlacement: saveWindowPlacement,
       if (enableAnimations != null) #enableAnimations: enableAnimations,
@@ -472,6 +482,10 @@ class _SettingsStateCopyWithImpl<$R, $Out>
     https: data.get(#https, or: $value.https),
     sendMode: data.get(#sendMode, or: $value.sendMode),
     sendServerUrl: data.get(#sendServerUrl, or: $value.sendServerUrl),
+    sendServerUploadAuthPassword: data.get(
+      #sendServerUploadAuthPassword,
+      or: $value.sendServerUploadAuthPassword,
+    ),
     saveWindowPlacement: data.get(
       #saveWindowPlacement,
       or: $value.saveWindowPlacement,

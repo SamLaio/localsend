@@ -37,6 +37,7 @@ pub struct SendServerFile {
 pub struct SendServerUploadOptions {
     pub server_url: String,
     pub password: Option<String>,
+    pub upload_auth_password: Option<String>,
     pub download_limit: u64,
     pub expire_seconds: u64,
 }
@@ -53,6 +54,8 @@ pub struct SendServerConfig {
     pub limits: SendServerLimits,
     #[serde(rename = "DEFAULTS")]
     pub defaults: SendServerDefaults,
+    #[serde(rename = "UPLOAD_AUTH")]
+    pub upload_auth: Option<SendServerUploadAuthConfig>,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -81,6 +84,18 @@ pub struct SendServerDefaults {
     pub expire_seconds: u64,
 }
 
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct SendServerUploadAuthConfig {
+    #[serde(rename = "REQUIRED")]
+    pub required: bool,
+    #[serde(rename = "KDF")]
+    pub kdf: String,
+    #[serde(rename = "PBKDF2_ITERATIONS")]
+    pub pbkdf2_iterations: u32,
+    #[serde(rename = "CHALLENGE_TTL_SECONDS")]
+    pub challenge_ttl_seconds: u64,
+}
+
 #[derive(thiserror::Error, Debug)]
 pub enum SendServerError {
     #[error("Invalid Send Server URL")]
@@ -97,6 +112,12 @@ pub enum SendServerError {
     Cancelled,
     #[error("Crypto error")]
     Crypto,
+    #[error("Upload password is required")]
+    UploadAuthRequired,
+    #[error("Upload password is incorrect")]
+    UploadAuthFailed,
+    #[error("Unsupported upload password KDF: {0}")]
+    UnsupportedUploadAuth(String),
 }
 
 pub async fn fetch_config(server_url: &str) -> Result<SendServerConfig, SendServerError> {
@@ -136,6 +157,15 @@ where
     let encrypted_metadata = keychain.encrypt_metadata(&metadata)?;
     let auth_key = keychain.auth_key()?;
     let authorization = format!("send-v1 {}", b64(&auth_key));
+    let upload_auth = upload_auth(
+        &options.server_url,
+        &encrypted_metadata,
+        &authorization,
+        options.expire_seconds,
+        options.download_limit,
+        options.upload_auth_password.as_deref(),
+    )
+    .await?;
 
     let (tx, rx) = mpsc::channel::<Result<Bytes, SendServerError>>(16);
     let encrypt_cancel = cancel_token.clone();
@@ -147,6 +177,7 @@ where
         &options.server_url,
         encrypted_metadata,
         authorization,
+        upload_auth,
         options.expire_seconds,
         options.download_limit,
         encrypted_size(total_size),
@@ -179,6 +210,7 @@ async fn upload_ws<F>(
     server_url: &str,
     encrypted_metadata: Vec<u8>,
     authorization: String,
+    upload_auth: Option<UploadAuthProof>,
     expire_seconds: u64,
     download_limit: u64,
     total_encrypted_size: u64,
@@ -195,12 +227,18 @@ where
         .await
         .map_err(|e| SendServerError::Network(e.to_string()))?;
 
-    let init = serde_json::json!({
+    let mut init = serde_json::json!({
         "fileMetadata": b64(&encrypted_metadata),
         "authorization": authorization,
         "timeLimit": expire_seconds,
         "dlimit": download_limit,
     });
+    if let Some(upload_auth) = upload_auth {
+        init["uploadAuth"] = serde_json::json!({
+            "uuid": upload_auth.uuid,
+            "proof": upload_auth.proof,
+        });
+    }
     ws.send(Message::Text(init.to_string().into()))
         .await
         .map_err(|e| SendServerError::Network(e.to_string()))?;
@@ -250,7 +288,11 @@ where
     let info: UploadInfoWire =
         serde_json::from_str(text).map_err(|e| SendServerError::InvalidResponse(e.to_string()))?;
     if let Some(error) = info.error {
-        return Err(SendServerError::InvalidResponse(error));
+        return Err(if error == "upload_auth" {
+            SendServerError::UploadAuthFailed
+        } else {
+            SendServerError::InvalidResponse(error)
+        });
     }
     Ok(UploadInfo {
         id: info
@@ -285,9 +327,105 @@ where
     let value: serde_json::Value =
         serde_json::from_str(text).map_err(|e| SendServerError::InvalidResponse(e.to_string()))?;
     if let Some(error) = value.get("error").and_then(|v| v.as_str()) {
-        return Err(SendServerError::InvalidResponse(error.to_string()));
+        return Err(if error == "upload_auth" {
+            SendServerError::UploadAuthFailed
+        } else {
+            SendServerError::InvalidResponse(error.to_string())
+        });
     }
     Ok(())
+}
+
+async fn upload_auth(
+    server_url: &str,
+    encrypted_metadata: &[u8],
+    authorization: &str,
+    expire_seconds: u64,
+    download_limit: u64,
+    password: Option<&str>,
+) -> Result<Option<UploadAuthProof>, SendServerError> {
+    let config = fetch_config(server_url).await?;
+    if !config
+        .upload_auth
+        .map(|auth| auth.required)
+        .unwrap_or(false)
+    {
+        return Ok(None);
+    }
+
+    let password = password
+        .filter(|value| !value.is_empty())
+        .ok_or(SendServerError::UploadAuthRequired)?;
+    let challenge = upload_auth_challenge(server_url).await?;
+    if !challenge.required {
+        return Ok(None);
+    }
+    if challenge.kdf != "pbkdf2-sha256" {
+        return Err(SendServerError::UnsupportedUploadAuth(challenge.kdf));
+    }
+
+    let file_metadata = b64(encrypted_metadata);
+    let message = upload_auth_message(
+        &challenge,
+        &file_metadata,
+        authorization,
+        expire_seconds,
+        download_limit,
+    );
+    let mut key = [0_u8; 32];
+    pbkdf2_hmac_sha256(
+        password.as_bytes(),
+        challenge.salt.as_bytes(),
+        challenge.iterations,
+        &mut key,
+    );
+    Ok(Some(UploadAuthProof {
+        uuid: challenge.uuid,
+        proof: hex(&hmac_sha256(&key, message.as_bytes())),
+    }))
+}
+
+async fn upload_auth_challenge(server_url: &str) -> Result<UploadAuthChallenge, SendServerError> {
+    let response = http_client()?
+        .get(api_url(server_url, "api/upload/challenge")?)
+        .send()
+        .await
+        .map_err(|e| SendServerError::Network(e.to_string()))?;
+    if !response.status().is_success() {
+        return Err(SendServerError::Status {
+            status: response.status().as_u16(),
+        });
+    }
+    response
+        .json()
+        .await
+        .map_err(|e| SendServerError::InvalidResponse(e.to_string()))
+}
+
+fn upload_auth_message(
+    challenge: &UploadAuthChallenge,
+    file_metadata: &str,
+    authorization: &str,
+    expire_seconds: u64,
+    download_limit: u64,
+) -> String {
+    [
+        "send-v1-upload".to_string(),
+        format!("uuid={}", challenge.uuid),
+        format!("challenge={}", challenge.challenge.as_deref().unwrap_or("")),
+        format!(
+            "expires_at={}",
+            challenge
+                .expires_at
+                .map(|value| value.to_string())
+                .unwrap_or_default()
+        ),
+        format!("fileMetadata={file_metadata}"),
+        format!("authorization={authorization}"),
+        format!("timeLimit={expire_seconds}"),
+        format!("dlimit={download_limit}"),
+    ]
+    .join("\n")
 }
 
 async fn set_password(
@@ -523,6 +661,10 @@ fn b64(value: &[u8]) -> String {
     URL_SAFE_NO_PAD.encode(value)
 }
 
+fn hex(value: &[u8]) -> String {
+    value.iter().map(|byte| format!("{byte:02x}")).collect()
+}
+
 fn api_url(server_url: &str, path: &str) -> Result<reqwest::Url, SendServerError> {
     let base = reqwest::Url::parse(server_url).map_err(|_| SendServerError::InvalidUrl)?;
     base.join(path).map_err(|_| SendServerError::InvalidUrl)
@@ -650,6 +792,29 @@ struct UploadInfoWire {
     error: Option<String>,
 }
 
+#[derive(Deserialize)]
+struct UploadAuthChallenge {
+    #[serde(default)]
+    required: bool,
+    #[serde(default)]
+    uuid: String,
+    #[serde(default)]
+    challenge: Option<String>,
+    #[serde(default)]
+    expires_at: Option<u64>,
+    #[serde(default)]
+    salt: String,
+    #[serde(default)]
+    kdf: String,
+    #[serde(default)]
+    iterations: u32,
+}
+
+struct UploadAuthProof {
+    uuid: String,
+    proof: String,
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -728,6 +893,50 @@ mod tests {
         assert_eq!(
             value["manifest"]["files"][1]["type"],
             "application/octet-stream"
+        );
+    }
+
+    #[test]
+    fn upload_auth_message_matches_server_shape() {
+        let challenge = UploadAuthChallenge {
+            required: true,
+            uuid: "u".into(),
+            challenge: Some("c".into()),
+            expires_at: Some(123),
+            salt: "salt".into(),
+            kdf: "pbkdf2-sha256".into(),
+            iterations: 1000,
+        };
+        assert_eq!(
+            upload_auth_message(&challenge, "meta", "send-v1 auth", 300, 1),
+            "send-v1-upload\nuuid=u\nchallenge=c\nexpires_at=123\nfileMetadata=meta\nauthorization=send-v1 auth\ntimeLimit=300\ndlimit=1",
+        );
+    }
+
+    #[test]
+    fn upload_auth_proof_matches_send_server_fixture() {
+        let challenge = UploadAuthChallenge {
+            required: true,
+            uuid: "85c7fe521122c8b067ee2e336d1516ca".into(),
+            challenge: Some(
+                "e77c6ec03f5d1dffce6654b793dca1ad81e69364c9cf60292368f9c966a5862a".into(),
+            ),
+            expires_at: Some(1788056798),
+            salt: "salt".into(),
+            kdf: "pbkdf2-sha256".into(),
+            iterations: 1000,
+        };
+        let mut key = [0_u8; 32];
+        pbkdf2_hmac_sha256(
+            b"secret",
+            challenge.salt.as_bytes(),
+            challenge.iterations,
+            &mut key,
+        );
+        let message = upload_auth_message(&challenge, "meta", "send-v1 auth", 300, 1);
+        assert_eq!(
+            hex(&hmac_sha256(&key, message.as_bytes())),
+            "d56d691232cddf293a985911ea0568b69aaf133866de494a193a3cb0a8552353",
         );
     }
 }

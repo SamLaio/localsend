@@ -88,6 +88,7 @@ const _https = 'ls_https';
 const _sendMode = 'ls_send_mode';
 const _sendServerUrl = 'ls_send_server_url';
 const _sendServerUrlEdited = 'ls_send_server_url_edited';
+const _sendServerUploadAuthPassword = 'ls_send_server_upload_auth_password';
 const _enableAnimations = 'ls_enable_animations';
 const _deviceType = 'ls_device_type';
 const _deviceModel = 'ls_device_model';
@@ -519,6 +520,18 @@ class PersistenceService {
   Future<void> setSendServerUrl(String url) async {
     await _prefs.setString(_sendServerUrl, url);
     await _prefs.setBool(_sendServerUrlEdited, true);
+  }
+
+  String? getSendServerUploadAuthPassword() {
+    return _prefs.getString(_sendServerUploadAuthPassword);
+  }
+
+  Future<void> setSendServerUploadAuthPassword(String? password) async {
+    if (password == null || password.isEmpty) {
+      await _prefs.remove(_sendServerUploadAuthPassword);
+    } else {
+      await _prefs.setString(_sendServerUploadAuthPassword, password);
+    }
   }
 
   Future<void> setWindowOffsetX(double x) async {

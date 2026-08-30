@@ -93,7 +93,11 @@ class IsolateSetupAction extends AsyncReduxAction<IsolateController, ParentIsola
         );
 
     final sendServerUpload =
-        await TypedIsolates.startIsolate<IsolateTaskStreamResult<SendServerUploadEvent>, SendToIsolateData<IsolateTask<BaseSendServerUploadTask>>, InitialData>(
+        await TypedIsolates.startIsolate<
+          IsolateTaskStreamResult<SendServerUploadEvent>,
+          SendToIsolateData<IsolateTask<BaseSendServerUploadTask>>,
+          InitialData
+        >(
           task: setupSendServerUploadIsolate,
           param: InitialData(
             syncState: state.syncState,

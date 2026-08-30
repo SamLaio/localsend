@@ -154,6 +154,7 @@ F-Droid 會透過 `support/scripts/remove_proprietary_dependencies.sh` 移除 `i
 - 這仍是 LocalSend fork：原本的區網 P2P 傳檔、web share、WebRTC、CLI 與 server 不應被 Send Server 功能破壞。
 - Send Server 功能是另一個傳送目標，不是取代 `SendMode.link`。`SendMode.link` 仍代表本機開 web server 讓瀏覽器下載。
 - 預設 Send Server URL 為 `https://exp.com/`，但必須可在設定中修改。
+- Send Server 上傳密碼是 server 層級權限密碼，與 Send Server URL 一起放在設定頁；上傳 dialog 只處理每次分享的下載密碼、下載次數與存活時間。
 - Send Server 上傳涉及 client-side encryption、密碼派生、WebSocket 上傳與分享連結；這是安全敏感流程，避免在 log、錯誤訊息、crash report 或 commit message 中暴露密碼、owner token、secret key 或完整私密連結。
 
 ### Send Server 功能架構

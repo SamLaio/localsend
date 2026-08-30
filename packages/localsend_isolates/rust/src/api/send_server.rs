@@ -28,6 +28,7 @@ pub async fn fetch_send_server_config(
 pub struct SendServerConfig {
     pub limits: SendServerLimits,
     pub defaults: SendServerDefaults,
+    pub upload_auth: Option<SendServerUploadAuthConfig>,
 }
 
 pub struct SendServerLimits {
@@ -46,11 +47,19 @@ pub struct SendServerDefaults {
     pub expire_seconds: u64,
 }
 
+pub struct SendServerUploadAuthConfig {
+    pub required: bool,
+    pub kdf: String,
+    pub pbkdf2_iterations: u32,
+    pub challenge_ttl_seconds: u64,
+}
+
 impl From<localsend::send_server::SendServerConfig> for SendServerConfig {
     fn from(value: localsend::send_server::SendServerConfig) -> Self {
         Self {
             limits: value.limits.into(),
             defaults: value.defaults.into(),
+            upload_auth: value.upload_auth.map(Into::into),
         }
     }
 }
@@ -83,6 +92,17 @@ impl From<localsend::send_server::SendServerDefaults> for SendServerDefaults {
     }
 }
 
+impl From<localsend::send_server::SendServerUploadAuthConfig> for SendServerUploadAuthConfig {
+    fn from(value: localsend::send_server::SendServerUploadAuthConfig) -> Self {
+        Self {
+            required: value.required,
+            kdf: value.kdf,
+            pbkdf2_iterations: value.pbkdf2_iterations,
+            challenge_ttl_seconds: value.challenge_ttl_seconds,
+        }
+    }
+}
+
 pub struct RsSendServerFile {
     pub name: String,
     pub size: u64,
@@ -95,6 +115,7 @@ pub struct RsSendServerFile {
 pub struct RsSendServerUploadOptions {
     pub server_url: String,
     pub password: Option<String>,
+    pub upload_auth_password: Option<String>,
     pub download_limit: u64,
     pub expire_seconds: u64,
 }
@@ -133,6 +154,7 @@ pub async fn upload_send_server(
             localsend::send_server::SendServerUploadOptions {
                 server_url: options.server_url,
                 password: options.password,
+                upload_auth_password: options.upload_auth_password,
                 download_limit: options.download_limit,
                 expire_seconds: options.expire_seconds,
             },
@@ -215,6 +237,9 @@ pub enum RsSendServerError {
     Io(String),
     Cancelled,
     Crypto,
+    UploadAuthRequired,
+    UploadAuthFailed,
+    UnsupportedUploadAuth(String),
     Other(String),
 }
 
@@ -234,6 +259,15 @@ impl From<localsend::send_server::SendServerError> for RsSendServerError {
             }
             localsend::send_server::SendServerError::Cancelled => RsSendServerError::Cancelled,
             localsend::send_server::SendServerError::Crypto => RsSendServerError::Crypto,
+            localsend::send_server::SendServerError::UploadAuthRequired => {
+                RsSendServerError::UploadAuthRequired
+            }
+            localsend::send_server::SendServerError::UploadAuthFailed => {
+                RsSendServerError::UploadAuthFailed
+            }
+            localsend::send_server::SendServerError::UnsupportedUploadAuth(e) => {
+                RsSendServerError::UnsupportedUploadAuth(e)
+            }
         }
     }
 }
