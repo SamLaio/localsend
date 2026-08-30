@@ -1,5 +1,5 @@
 param(
-  [string]$ReleaseVersion = '1.18.2_re_1',
+  [string]$ReleaseVersion = '1.18.2_re_2',
   [string]$SigningEnvFile = 'D:\project\apkKey\localsend.local.ps1',
   [switch]$SkipAndroid,
   [switch]$SkipWindows

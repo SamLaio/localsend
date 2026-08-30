@@ -218,7 +218,7 @@ release/[版本]/release.apk
 SamLaio fork 發版產物優先使用單一 release 腳本：
 
 ```powershell
-.\support\scripts\compile_release_apk_exe.ps1 -ReleaseVersion '1.18.2_re_1'
+.\support\scripts\compile_release_apk_exe.ps1 -ReleaseVersion '1.18.2_re_2'
 ```
 
 此腳本會產生 Android 11+ arm64 release APK 與 Windows 10+ x64 portable ZIP：
@@ -237,8 +237,8 @@ D:\project\apkKey\localsend.local.ps1
 該檔必須只存在本機，不可提交。只建單一平台時可使用：
 
 ```powershell
-.\support\scripts\compile_release_apk_exe.ps1 -ReleaseVersion '1.18.2_re_1' -SkipWindows
-.\support\scripts\compile_release_apk_exe.ps1 -ReleaseVersion '1.18.2_re_1' -SkipAndroid
+.\support\scripts\compile_release_apk_exe.ps1 -ReleaseVersion '1.18.2_re_2' -SkipWindows
+.\support\scripts\compile_release_apk_exe.ps1 -ReleaseVersion '1.18.2_re_2' -SkipAndroid
 ```
 
 ## Commit 前檢查
